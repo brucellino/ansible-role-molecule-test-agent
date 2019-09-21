@@ -7,9 +7,21 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 ).get_hosts('all')
 
 
-def test_hosts_file(host):
-    f = host.file('/etc/hosts')
+def test_connectivity(host):
+    '''
+    The test agent should be able to connect to the chef
+    supermarket and have access to the internet
+    '''
+    supermarket = host.addr('supermarket.chef.io')
 
-    assert f.exists
-    assert f.user == 'root'
-    assert f.group == 'root'
+    assert supermarket.is_resolvable
+    for port in ['80', '443']:
+        assert supermarket.port(port).is_reachable
+
+
+def test_inspec(host):
+    '''
+    Check that we can execute inspec in a basic way and that
+    the inspec variable is a sane version
+    '''
+    assert host.exists('inspec')

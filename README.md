@@ -38,6 +38,13 @@ Then write your playbook to use it.
          - { role: brucellino.test_agent }
 ```
 
+## Test coverage and scenarios
+
+Test Name | Description | Scenarios
+---------|-----------|------------
+`test_connectivity` | Assert connectivity to Chef SuperMarket | Default
+`test_inspec`       | Assert ability to run Inspec | Default
+
 ## License
 
 Apache
