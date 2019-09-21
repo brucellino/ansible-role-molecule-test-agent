@@ -18,7 +18,7 @@
     install_recommends: true
   when: ansible_os_family | lower == 'debian'
 
-- name: Get Inspec executble (RedHat)
+- name: Get Inspec executable (RedHat)
   yum:
     update_cache: true
     name: https://packages.chef.io/files/stable/inspec/{{ inspec_version }}/el/7/inspec-{{ inspec_version }}-1.el7.x86_64.rpm
@@ -26,3 +26,33 @@
     state: present
     validate_certs: true
   when: ansible_os_family | lower == 'redhat'
+
+- name: Create virtualenv dir
+  file:
+    path: /opt/virtualenv
+    group: root
+    state: directory
+    mode: 0755
+    owner: root
+
+- name: Create virtualenv
+  command: "virtualenv molecule  -p python3.6"
+  args:
+    creates: /opt/virtualenv/molecule/bin/activate
+    chdir: /opt/virtualenv
+
+- name: Ship requirements
+  template:
+    dest: /opt/virtualenv/molecule/requirements.txt
+    src: requirements.txt.j2
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+
+- name: Ensure Molecule
+  pip:
+    virtualenv: /opt/virtualenv/molecule
+    virtualenv_command: virtualenv
+    requirements: /opt/virtualenv/molecule/requirements.txt
+    state: present

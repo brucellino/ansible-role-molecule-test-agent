@@ -3,7 +3,24 @@
 # --------------------------------------------------
 # Prerequisites
 prerequisites:
-  debian: []
-  redhat: []
+  debian:
+    - python3-pip
+    - python3-dev
+    - python-virtualenv
+    - openssl
+    - libssl-dev
+    - libffi-dev
+    - build-essential
+  redhat:
+    - python3-pip
+    - python3-devel
+    - python-virtualenv
+    - openssl-devel
+    - libselinux-python
+    - libffi-devel
+    - libffi
+    - gcc
 # Inspec version
 inspec_version: 4.16.0
+# Ansible and friends
+molecule_version: 2.22

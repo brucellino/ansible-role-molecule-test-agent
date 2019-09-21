@@ -45,3 +45,12 @@ def test_inspec(host):
     inspec = host.package('inspec')
     assert host.exists('inspec')
     assert LooseVersion(inspec.version) > LooseVersion('4.7')
+
+
+def test_ansible(host):
+    '''
+    Check that Ansible is available with the right version
+    '''
+
+    assert 'ansible' in host.pip_package.\
+        get_packages(pip_path='/opt/virtualenv/molecule/bin/pip')
