@@ -1,44 +1,50 @@
-# Role Name
+# Molecule Test Agent
 
-A brief description of the role goes here.
+This role provisions an environment in which to test Ansible roles.
+In order to test Ansible roles, you probably want to do a few things:
+
+1. Ensure adherence to a style guide
+2. Ensure proper code and quality checks
+3. Ensure functional test coverage
 
 ## Requirements
 
-Any pre-requisites that may not be covered by Ansible itself or the role should
-be mentioned here. For instance, if the role uses the EC2 module, it may be a
-good idea to mention in this section that the boto package is required.
+None.
 
 ## Role Variables
 
-A description of the settable variables for this role should go here, including
-any variables that are in defaults/main.yml, vars/main.yml, and any variables
-that can/should be set via parameters to the role. Any variables that are read
-from other roles and/or the global scope (ie. hostvars, group vars, etc.) should
-be mentioned here as well.
+None.
 
 ## Dependencies
 
-A list of other roles hosted on Galaxy should go here, plus any details in
-regards to parameters that may need to be set for other roles, or variables that
-are used from other roles.
+None.
 
 ## Example Playbook
 
-Including an example of how to use your role (for instance, with variables
-passed in as parameters) is always nice for users too:
+Add this role to your requirements as such
 
+```yaml
+# requrements.yml
+- name: brucellino.test_agent
+  src: https://github.com/brucellino/ansible-role-molecule-test-agent
+  version: master
+```
+
+Then write your playbook to use it.
+
+```yaml
     - hosts: servers
       roles:
-         - { role: username.rolename, x: 42 }
+         - { role: brucellino.test_agent }
+```
 
 ## License
 
-BSD
+Apache
 
 ## Author Information
 
-An optional section for the role authors to include contact information, or a
-website (HTML is not allowed).
+Bruce Becker
 
 ### Housekeeping
 
