@@ -13,7 +13,9 @@ None.
 
 ## Role Variables
 
-None.
+Variable Name | Variable Description
+--------------|---------------------
+`ruby_packages` | OS-dependent name of the ruby package to install
 
 ## Dependencies
 

@@ -1,2 +1,9 @@
 ---
 # defaults file for ansible-role-molecule-test-agent
+# --------------------------------------------------
+# Prerequisites
+prerequisites:
+  debian: []
+  redhat: []
+# Inspec version
+inspec_version: 4.16.0
