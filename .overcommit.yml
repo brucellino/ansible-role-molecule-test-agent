@@ -26,6 +26,6 @@ PreCommit:
     enabled: true
   YamlLint:
     enabled: true
-  CustomScript:
-    enabled: true
-    command: 'molecule test'
+#  CustomScript:
+#    enabled: true
+#    command: 'molecule test'
