@@ -47,6 +47,14 @@ def test_inspec(host):
     assert LooseVersion(inspec.version) > LooseVersion('4.7')
 
 
+def test_inspect_profile(host):
+    '''
+    We should be able to execute a dummy inspec profile against this host
+    '''
+    inspec_command = host.run('inspec supermaket info dev-sec/linux-baseline')
+    assert inspec_command.rc == 0
+
+
 def test_ansible(host):
     '''
     Check that Ansible is available with the right version

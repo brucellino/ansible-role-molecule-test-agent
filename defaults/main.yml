@@ -1,6 +1,14 @@
 ---
 # defaults file for ansible-role-molecule-test-agent
 # --------------------------------------------------
+# Security prerequisites
+dev_sec_prerequisites:
+  debian:
+    - rsyslog
+    - auditd
+  redhat:
+    - rsyslog
+    - audit
 # Prerequisites
 prerequisites:
   debian:
@@ -24,3 +32,10 @@ prerequisites:
 inspec_version: 4.16.0
 # Ansible and friends
 molecule_version: 2.22
+
+# Dev-Sec security stuff
+sysctl_security_items:
+  - name: kernel.sysrq
+    value: 0
+  - name: net.ipv6.conf.default.max_addresses
+    value: 1
