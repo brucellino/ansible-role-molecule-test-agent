@@ -1,5 +1,7 @@
 ---
 # tasks file for ansible-role-molecule-test-agent
+- include_tasks: security.yml
+
 - name: Ensure prerequisites
   package:
     state: present
