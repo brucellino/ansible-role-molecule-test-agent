@@ -12,8 +12,10 @@ dev_sec_prerequisites:
 # Prerequisites
 prerequisites:
   debian:
+    - python3
     - python3-pip
     - python3-dev
+    - python-dev
     - python-virtualenv
     - openssl
     - libssl-dev

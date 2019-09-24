@@ -37,11 +37,18 @@
     mode: 0755
     owner: root
 
-- name: Create virtualenv
-  command: "virtualenv molecule  -p python3.6"
+- name: Create virtualenv for Python3
+  command: "virtualenv molecule3  -p python3"
+  args:
+    creates: /opt/virtualenv/molecule3/bin/activate
+    chdir: /opt/virtualenv
+
+- name: Create virtualenv for Python2
+  command: "virtualenv molecule  -p python2"
   args:
     creates: /opt/virtualenv/molecule/bin/activate
     chdir: /opt/virtualenv
+
 
 - name: Ship requirements
   template:
