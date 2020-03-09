@@ -7,15 +7,29 @@ In order to test Ansible roles, you probably want to do a few things:
 2. Ensure proper code and quality checks
 3. Ensure functional test coverage
 
+This role provides the execution environment for running these tasks, typically in a containerised environment.
+
+The role adds the following tools:
+
+- Python, pip, virtual environment
+- [Molecule](https://molecule.readthedocs.io/en/latest/)
+- [Ansible](https://docs.ansible.com/ansible) (as a dependency of Molecule)
+- Ruby (required for executing [Inspec](https://inspec.io) tests)
+- [Inspec](https://inspec.io) executable
+
 ## Requirements
 
 None.
 
 ## Role Variables
 
-Variable Name | Variable Description
---------------|---------------------
-`ruby_packages` | OS-dependent name of the ruby package to install
+| Variable Name           | Variable Description                                 |
+| ----------------------- | ---------------------------------------------------- |
+| `rvm_gpg_keys`          | GPG keys of the Ruby Version Manager maintainers     |
+| `dev_sec_prerequisites` | Prerequisites for the Dev-Sec Inspec profile         |
+| `prerequisites`         | OS-dependent list of packages needed as prerequisite |
+| `inspec_version`        | Version of Chef Inspec to install                    |
+| `molecule_version`      | Version of Molecule to install                       |
 
 ## Dependencies
 
@@ -35,17 +49,19 @@ Add this role to your requirements as such
 Then write your playbook to use it.
 
 ```yaml
-    - hosts: servers
-      roles:
-         - { role: brucellino.test_agent }
+- hosts: servers
+  roles:
+    - { role: brucellino.test_agent }
 ```
 
 ## Test coverage and scenarios
 
-Test Name | Description | Scenarios
----------|-----------|------------
-`test_connectivity` | Assert connectivity to Chef SuperMarket | Default
-`test_inspec`       | Assert ability to run Inspec | Default
+| Test Name              | Description                                    | Scenarios |
+| ---------------------- | ---------------------------------------------- | --------- |
+| `test_connectivity`    | Assert connectivity to Chef SuperMarket        | Default   |
+| `test_inspec`          | Assert ability to run Inspec                   | Default   |
+| `test_inspect_profile` | Assert that an Inspect profile can be executed | Default   |
+| `test_ansible`         | Assert that Ansible can be executed            | default   |
 
 ## License
 

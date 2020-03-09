@@ -1,12 +1,15 @@
 ---
 # tasks file for ansible-role-molecule-test-agent
 - include_tasks: security.yml
+  when: (ansible_virtualization_role != 'guest' and ansible_virtualization_type != 'docker')
 
 - name: Ensure prerequisites
   package:
     state: present
     name: "{{ item }}"
   loop: "{{ prerequisites[ansible_os_family | lower ] }}"
+
+- include_tasks: ruby.yml
 
 - name: Get Inspec executable (Debian)
   apt:

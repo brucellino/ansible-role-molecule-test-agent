@@ -5,6 +5,7 @@ import pytest
 testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
     os.environ['MOLECULE_INVENTORY_FILE']
 ).get_hosts('all')
+dev_sec_profile = 'dev-sec/linux-baseline'
 
 
 def test_connectivity(host):
@@ -51,7 +52,11 @@ def test_inspect_profile(host):
     '''
     We should be able to execute a dummy inspec profile against this host
     '''
-    inspec_command = host.run('inspec supermaket info dev-sec/linux-baseline')
+
+    cmd = 'inspec supermarket info ' + \
+        dev_sec_profile + \
+        ' --chef-license=accept-silent'
+    inspec_command = host.run(cmd)
     assert inspec_command.rc == 0
 
 
