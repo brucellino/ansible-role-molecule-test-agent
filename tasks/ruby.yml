@@ -1,0 +1,29 @@
+- name: Get GPG Keys
+  get_url:
+    url: "https://rvm.io/{{ item }}"
+    dest: "/root/{{ item }}"
+  loop: "{{ rvm_gpg_keys }}"
+
+- name: Ensure GPG keys present
+  shell: "gpg2 --import /root/{{ item }}"
+  changed_when: false
+  loop: "{{ rvm_gpg_keys }}"
+
+- name: Get RVM installer
+  get_url:
+    url: https://get.rvm.io
+    dest: /root/install_rvm.sh
+    mode: '0777'
+
+- name: Ensure rvm
+  shell: /root/install_rvm.sh stable
+
+- name: Ensure rvm profile script is read only
+  file:
+    path: /etc/profile.d/rvm.sh
+    group: root
+    owner: root
+    mode: 0644
+
+- name: Install ruby 2.6.0
+  command: /bin/bash --login -c 'rvm install --no-docs 2.6.0'

@@ -1,0 +1,19 @@
+pipeline {
+  options {
+    skipDefaultCheckout()
+    checkoutToSubdirectory 'ansible-role-molecule-test-agent'
+  }
+  agent none
+  environment {
+    AWS_REGION='eu-central-1'
+  }
+  stages {
+    stage('Lint') {
+      agent { label 'molecule-ecs' }
+      steps {
+        sh 'Lint stage'
+        sh 'molecule lint'
+      }
+    }
+  }
+}
