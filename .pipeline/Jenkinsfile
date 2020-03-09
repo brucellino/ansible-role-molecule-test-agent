@@ -11,7 +11,7 @@ pipeline {
     stage('Lint') {
       agent { label 'molecule-ecs' }
       steps {
-        sh 'Lint stage'
+        echo 'Lint stage'
         sh 'molecule lint'
       }
     }

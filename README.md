@@ -63,6 +63,14 @@ Then write your playbook to use it.
 | `test_inspect_profile` | Assert that an Inspect profile can be executed | Default   |
 | `test_ansible`         | Assert that Ansible can be executed            | default   |
 
+## Artefacts
+
+Beware: circular dependency ! **This role uses artifacts produced by itself to test itself**.
+In order to execute the continuous delivery pipeline, an execution agent is needed _with the same environment that this role expresses_.
+This is a bootstrapping problem which needs to be broken the first time by executing the build and delivery by hand.
+
+[Packer](https://packer.io) is used to create executable artefacts in different envrionments (AWS, Docker)
+
 ## License
 
 Apache
