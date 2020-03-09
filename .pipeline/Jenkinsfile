@@ -1,7 +1,6 @@
 pipeline {
   options {
-    skipDefaultCheckout()
-    checkoutToSubdirectory 'ansible-role-molecule-test-agent'
+    checkoutToSubdirectory('ansible-role-molecule-test-agent')
   }
   agent none
   environment {
@@ -11,15 +10,22 @@ pipeline {
   stages {
     stage('Test') {
       agent { label 'molecule-ecs' }
+      when {
+        changeRequest()
+        beforeAgent true
+      }
       steps {
+        checkout scm
+        sh 'ls -la'
+        sh 'pwd'
         echo 'Lint stage'
         sh '''
 . /opt/virtualenv/molecule3/bin/activate
 molecule lint
 molecule converge
 molecule verify
-        '''
-      }
+          '''
+      } // steps
       post {
         always {
           junit 'molecule/**/*.xml'
@@ -31,23 +37,26 @@ molecule destroy
       }
     }
     stage('Bake') {
+      when {
+        branch 'master'
+        beforeAgent true
+      }
       agent { label 'molecule-ecs' }
       steps {
+        checkout scm
         withCredentials([
           usernamePassword(
             credetialsId: 'uefadevops+quaybot/',
             usernameVariable: 'QUAY_USERNAME',
             passwordVariable: 'QUAY_PASSWORD' )
           ]) {
-          dir('.pipeline') {
-            sh '''
+          sh '''
 .  /opt/virtualenv/molecule3/bin/activate
 packer build
 docker login -u="${QUAY_USERNAME}" -p="${QUAY_PASSWORD}" quay.io
 docker push quay.io/uefadevops/molecule-build-agent
 docker logout
               '''
-          }
         } // credentials
       } // steps
     } // bake stage
