@@ -14,7 +14,7 @@ pipeline {
       steps {
         echo 'Lint stage'
         sh '''
-/opt/virtualenv/molecule3/bin/activate
+. /opt/virtualenv/molecule3/bin/activate
 molecule lint
 molecule converge
         '''
