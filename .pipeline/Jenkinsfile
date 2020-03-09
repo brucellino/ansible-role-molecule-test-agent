@@ -22,7 +22,7 @@ molecule converge
       post {
         always {
           sh '''
-/opt/virtualenv/molecule3/bin/activate
+. /opt/virtualenv/molecule3/bin/activate
 molecule destroy
           '''
         }
@@ -39,8 +39,8 @@ molecule destroy
           ]) {
           dir('.pipeline') {
             sh '''
-  /opt/virtualenv/molecule3/bin/activate
-  packer build
+.  /opt/virtualenv/molecule3/bin/activate
+packer build
               '''
           }
         } // credentials
