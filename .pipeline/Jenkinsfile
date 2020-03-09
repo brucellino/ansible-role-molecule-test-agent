@@ -9,7 +9,7 @@ pipeline {
     QUAY_PASSWORD="uefadevops+quaybot"
   }
   stages {
-    stage('Lint and Converge') {
+    stage('Test') {
       agent { label 'molecule-ecs' }
       steps {
         echo 'Lint stage'
@@ -17,10 +17,12 @@ pipeline {
 . /opt/virtualenv/molecule3/bin/activate
 molecule lint
 molecule converge
+molecule verify
         '''
       }
       post {
         always {
+          junit 'molecule/**/*.xml'
           sh '''
 . /opt/virtualenv/molecule3/bin/activate
 molecule destroy

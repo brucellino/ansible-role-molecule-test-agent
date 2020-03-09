@@ -2,8 +2,8 @@
   "variables": {
     "ansible_host": "default",
     "ansible_connection": "docker",
-    "QUAY_USER": "{{ `env QUAY_USER` }}",
-    "QUAY_PASSWORD": "{{ `env QUAY_PASSWORD` }}"
+    "quay_user": "{{ env `QUAY_USER` }}",
+    "quay_password": "{{ env `QUAY_PASSWORD` }}"
   },
   "builders": [
     {
@@ -39,9 +39,9 @@
     {
       "type": "docker-push",
       "login": "true",
-      "login_username": "{{ `user QUAY_USER` }}",
-      "login_password": "{{ `user QUAY_PASSWORD` }}",
-      "login_server": "quay.io"
+      "login_username": "{{ user `quay_user` }}",
+      "login_password": "{{ user `quay_password` }}",
+      "login_server": "https://quay.io"
     }
   ]
 }

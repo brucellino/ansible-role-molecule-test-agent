@@ -16,3 +16,5 @@ verifier:
   name: testinfra
   lint:
     name: flake8
+  options:
+    junit-xml: junit.xml
