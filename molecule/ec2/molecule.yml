@@ -1,0 +1,25 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: ec2
+lint:
+  name: yamllint
+platforms:
+  - name: ubuntu-18.10-instance
+    image: ami-0ca54ebdb2e62512e
+    instance_type: t2.medium
+    vpc_subnet_id: subnet-fda20880
+    instance_tags:
+      - Name: "molecule"
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+verifier:
+  name: testinfra
+  lint:
+    name: flake8
+  options:
+    junit-xml: junit.xml
+  directory: ../default/tests/
