@@ -19,14 +19,12 @@ pipeline {
         sh 'ls -la'
         sh 'pwd'
         echo 'Lint stage'
-        dir('ansible-role-molecule-test-agent') {
-          sh '''
+        sh '''
 . /opt/virtualenv/molecule3/bin/activate
 molecule lint
 molecule converge
 molecule verify
           '''
-        } // dir
       } // steps
       post {
         always {
@@ -52,15 +50,13 @@ molecule destroy
             usernameVariable: 'QUAY_USERNAME',
             passwordVariable: 'QUAY_PASSWORD' )
           ]) {
-          dir('.pipeline') {
-            sh '''
+          sh '''
 .  /opt/virtualenv/molecule3/bin/activate
 packer build
 docker login -u="${QUAY_USERNAME}" -p="${QUAY_PASSWORD}" quay.io
 docker push quay.io/uefadevops/molecule-build-agent
 docker logout
               '''
-          }
         } // credentials
       } // steps
     } // bake stage
