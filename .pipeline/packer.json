@@ -1,9 +1,7 @@
 {
   "variables": {
     "ansible_host": "default",
-    "ansible_connection": "docker",
-    "quay_user": "{{ env `QUAY_USER` }}",
-    "quay_password": "{{ env `QUAY_PASSWORD` }}"
+    "ansible_connection": "docker"
   },
   "builders": [
     {
@@ -35,13 +33,6 @@
       "type": "docker-tag",
       "repository": "quay.io/uefadevops/molecule-build-agent",
       "tag": "latest"
-    },
-    {
-      "type": "docker-push",
-      "login": "true",
-      "login_username": "{{ user `quay_user` }}",
-      "login_password": "{{ user `quay_password` }}",
-      "login_server": "https://quay.io"
     }
   ]
 }
