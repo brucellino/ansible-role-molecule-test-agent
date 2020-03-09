@@ -1,0 +1,55 @@
+pipeline {
+  options {
+    skipDefaultCheckout()
+    checkoutToSubdirectory 'ansible-role-molecule-test-agent'
+  }
+  agent none
+  environment {
+    AWS_REGION='eu-central-1'
+    QUAY_PASSWORD="uefadevops+quaybot"
+  }
+  stages {
+    stage('Test') {
+      agent { label 'molecule-ecs' }
+      steps {
+        echo 'Lint stage'
+        sh '''
+. /opt/virtualenv/molecule3/bin/activate
+molecule lint
+molecule converge
+molecule verify
+        '''
+      }
+      post {
+        always {
+          junit 'molecule/**/*.xml'
+          sh '''
+. /opt/virtualenv/molecule3/bin/activate
+molecule destroy
+          '''
+        }
+      }
+    }
+    stage('Bake') {
+      agent { label 'molecule-ecs' }
+      steps {
+        withCredentials([
+          usernamePassword(
+            credetialsId: 'uefadevops+quaybot/',
+            usernameVariable: 'QUAY_USERNAME',
+            passwordVariable: 'QUAY_PASSWORD' )
+          ]) {
+          dir('.pipeline') {
+            sh '''
+.  /opt/virtualenv/molecule3/bin/activate
+packer build
+docker login -u="${QUAY_USERNAME}" -p="${QUAY_PASSWORD}" quay.io
+docker push quay.io/uefadevops/molecule-build-agent
+docker logout
+              '''
+          }
+        } // credentials
+      } // steps
+    } // bake stage
+  } // stages
+} // pipeline

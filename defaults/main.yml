@@ -1,16 +1,29 @@
 ---
 # defaults file for ansible-role-molecule-test-agent
 # --------------------------------------------------
+# Security prerequisites
+dev_sec_prerequisites:
+  debian:
+    - rsyslog
+    - auditd
+  redhat:
+    - rsyslog
+    - audit
 # Prerequisites
 prerequisites:
   debian:
+    - python3
     - python3-pip
     - python3-dev
+    - python-dev
     - python-virtualenv
     - openssl
     - libssl-dev
     - libffi-dev
     - build-essential
+    - gnupg2
+    - curl
+    - pass
   redhat:
     - python3-pip
     - python3-devel
@@ -20,7 +33,19 @@ prerequisites:
     - libffi-devel
     - libffi
     - gcc
+    - curl
 # Inspec version
 inspec_version: 4.16.0
 # Ansible and friends
 molecule_version: 2.22
+# RVM maintainer keys that should be present
+rvm_gpg_keys:
+  - mpapis.asc
+  - pkuczynski.asc
+
+# Dev-Sec security stuff
+sysctl_security_items:
+  - name: kernel.sysrq
+    value: 0
+  - name: net.ipv6.conf.default.max_addresses
+    value: 1

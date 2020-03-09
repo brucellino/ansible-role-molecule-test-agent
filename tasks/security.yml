@@ -1,0 +1,18 @@
+---
+# Security tasks for targets.
+# Based on dev-sec security baseline
+- name: Install necessary packages for tracing
+  package:
+    state: present
+    name: "{{ item }}"
+  loop: "{{ dev_sec_prerequisites[ansible_os_family | lower] }}"
+
+- name: Secury kernel parameters
+  sysctl:
+    name: "{{ item.name }}"
+    reload: true
+    state: present
+    sysctl_set: true
+    ignoreerrors: false
+    value: "{{ item.value }}"
+  loop: "{{ sysctl_security_items }}"

@@ -6,8 +6,6 @@ driver:
 lint:
   name: yamllint
 platforms:
-  - name: centos7
-    image: centos:7
   - name: bionic
     image: ubuntu:bionic
 provisioner:
@@ -18,3 +16,5 @@ verifier:
   name: testinfra
   lint:
     name: flake8
+  options:
+    junit-xml: junit.xml

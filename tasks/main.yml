@@ -1,10 +1,15 @@
 ---
 # tasks file for ansible-role-molecule-test-agent
+- include_tasks: security.yml
+  when: (ansible_virtualization_role != 'guest' and ansible_virtualization_type != 'docker')
+
 - name: Ensure prerequisites
   package:
     state: present
     name: "{{ item }}"
   loop: "{{ prerequisites[ansible_os_family | lower ] }}"
+
+- include_tasks: ruby.yml
 
 - name: Get Inspec executable (Debian)
   apt:
@@ -35,24 +40,37 @@
     mode: 0755
     owner: root
 
-- name: Create virtualenv
-  command: "virtualenv molecule  -p python3.6"
+- name: Create virtualenv for Python3
+  command: "virtualenv molecule3  -p python3"
+  args:
+    creates: /opt/virtualenv/molecule3/bin/activate
+    chdir: /opt/virtualenv
+
+- name: Create virtualenv for Python2
+  command: "virtualenv molecule  -p python2"
   args:
     creates: /opt/virtualenv/molecule/bin/activate
     chdir: /opt/virtualenv
 
+
 - name: Ship requirements
   template:
-    dest: /opt/virtualenv/molecule/requirements.txt
+    dest: "/opt/virtualenv/{{ item }}/requirements.txt"
     src: requirements.txt.j2
     owner: root
     group: root
     mode: 0644
     backup: true
+  loop:
+    - molecule
+    - molecule3
 
 - name: Ensure Molecule
   pip:
-    virtualenv: /opt/virtualenv/molecule
+    virtualenv: "/opt/virtualenv/{{ item }}"
     virtualenv_command: virtualenv
-    requirements: /opt/virtualenv/molecule/requirements.txt
+    requirements: "/opt/virtualenv/{{ item }}/requirements.txt"
     state: present
+  loop:
+    - molecule
+    - molecule3

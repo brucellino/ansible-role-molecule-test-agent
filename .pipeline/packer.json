@@ -1,0 +1,38 @@
+{
+  "variables": {
+    "ansible_host": "default",
+    "ansible_connection": "docker"
+  },
+  "builders": [
+    {
+      "type": "docker",
+      "image": "quay.io/uefadevops/jenkins-agent-jnlp",
+      "name": "container",
+      "commit": "true",
+      "privileged": "true",
+      "run_command": [ "-d", "-i", "-t", "--name", "{{user `ansible_host`}}", "{{.Image}}", "/bin/bash" ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "ansible",
+      "playbook_file": "playbook.yml",
+      "user": "root",
+      "ansible_env_vars": [
+        "ANSIBLE_ROLES_PATH=$PWD/../../",
+        "ANSIBLE_STDOUT_CALLBACK=profile_tasks"
+      ],
+      "extra_arguments": [
+        "-e ansible_host={{ user `ansible_host` }}",
+        "-e ansible_connection=docker"
+      ]
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "docker-tag",
+      "repository": "quay.io/uefadevops/molecule-build-agent",
+      "tag": "latest"
+    }
+  ]
+}
