@@ -40,7 +40,8 @@
       "type": "docker-push",
       "login": "true",
       "login_username": "{{ `user QUAY_USER` }}",
-      "login_password": "{{ `user QUAY_PASSWORD` }}"
+      "login_password": "{{ `user QUAY_PASSWORD` }}",
+      "login_server": "quay.io"
     }
   ]
 }
