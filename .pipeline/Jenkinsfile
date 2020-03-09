@@ -6,14 +6,36 @@ pipeline {
   agent none
   environment {
     AWS_REGION='eu-central-1'
+    QUAY_PASSWORD="uefadevops+quaybot"
   }
   stages {
-    stage('Lint') {
+    stage('Lint and Converge') {
       agent { label 'molecule-ecs' }
       steps {
         echo 'Lint stage'
         sh 'molecule lint'
+        sh 'molecule converge'
+      }
+      post {
+        always {
+          sh 'molecule destroy'
+        }
       }
     }
+  stage('Bake') {
+    agent { label 'molecule-ecs' }
+    steps {
+      withCredentials([
+        usernamePassword(
+          credetialsId: 'uefadevops+quaybot/',
+          usernameVariable: 'QUAY_USERNAME',
+          passwordVariable: 'QUAY_PASSWORD' )
+        ]) {
+        dir('.pipeline') {
+          sh 'packer build'
+        }
+      } // credentials
+    }
+  }
   }
 }
