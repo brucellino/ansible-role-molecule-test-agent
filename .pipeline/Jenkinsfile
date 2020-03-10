@@ -68,13 +68,13 @@ molecule -s ec2 destroy
         branch 'master'
         beforeAgent true
       }
-      agent { label 'build-agent-ec2' }
+      agent { label 'molecule-agent' }
       steps {
         checkout scm
         dir('.pipeline') {
           withCredentials([
           usernamePassword(
-            credentialsId: 'uefadevops+quaybot/',
+            credentialsId: 'uefadevops+quaybot',
             usernameVariable: 'QUAY_USERNAME',
             passwordVariable: 'QUAY_PASSWORD' )
           ]) {
