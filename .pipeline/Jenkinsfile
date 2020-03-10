@@ -5,43 +5,70 @@ pipeline {
   agent none
   environment {
     AWS_REGION='eu-central-1'
-    QUAY_PASSWORD="uefadevops+quaybot"
   }
   stages {
     stage('Test') {
-      agent { label 'molecule-ecs' }
       when {
         changeRequest()
         beforeAgent true
       }
-      steps {
-        checkout scm
-        sh 'ls -la'
-        sh 'pwd'
-        echo 'Lint stage'
-        sh '''
-. /opt/virtualenv/molecule3/bin/activate
-molecule lint
-molecule converge
-molecule verify
-          '''
-      } // steps
-      post {
-        always {
-          junit 'molecule/**/*.xml'
+      parallel {
+        stage('EC2') {
+          agent { label 'molecule-ecs' }
+          steps {
+            checkout scm
+            sh 'ls -la'
+            sh 'pwd'
+            echo 'Lint stage'
+            withCredentials([[
+              $class: 'AmazonWebServicesCredentialsBinding',
+              accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+              credentialsId: 'aws_sandbox_credentials_jenkins',
+              secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+            sh '''
+  . /opt/virtualenv/molecule3/bin/activate
+  molecule -s ec2 lint
+  molecule -s ec2 converge
+  molecule -s ec2 verify
+            '''
+          } // credentials
+        } // steps
+        post {
+          always {
+            junit 'molecule/ec2/*.xml'
+            sh '''
+  . /opt/virtualenv/molecule3/bin/activate
+  molecule -s ec2 destroy
+            '''
+          } // always post
+        } // post
+      } // stage
+      stage('Docker') {
+        agent { label 'molecule-ecs' }
+        steps {
+          checkout scm
           sh '''
-. /opt/virtualenv/molecule3/bin/activate
-molecule destroy
+. /opt/virtualenv/molecule/bin/activate
+molecule -s ec2 lint
           '''
-        }
-      }
-    }
+          } // steps
+          post {
+            always {
+              sh '''
+. /opt/virtualenv/molecule3/bin/activate
+molecule -s ec2 destroy
+                '''
+            } // always post
+          } // post
+        } // stage
+      } // parallel test stage
+    } // Test stage
     stage('Bake') {
       when {
         branch 'master'
         beforeAgent true
       }
-      agent { label 'molecule-ecs' }
+      agent { label 'build-agent-ec2' }
       steps {
         checkout scm
         dir('.pipeline') {
@@ -52,7 +79,7 @@ molecule destroy
             passwordVariable: 'QUAY_PASSWORD' )
           ]) {
             sh '''
-.  /opt/virtualenv/molecule3/bin/activate
+.  /opt/virtualenv/molecule/bin/activate
 packer build
 docker login -u="${QUAY_USERNAME}" -p="${QUAY_PASSWORD}" quay.io
 docker push quay.io/uefadevops/molecule-build-agent
