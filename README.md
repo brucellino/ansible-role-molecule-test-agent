@@ -11,7 +11,7 @@ This role provides the execution environment for running these tasks, typically 
 
 The role adds the following tools:
 
-- Python, pip, virtual environment
+- Python, pip, virtual environment (only Python3)
 - [Molecule](https://molecule.readthedocs.io/en/latest/)
 - [Ansible](https://docs.ansible.com/ansible) (as a dependency of Molecule)
 - Ruby (required for executing [Inspec](https://inspec.io) tests)
