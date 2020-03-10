@@ -44,20 +44,22 @@ molecule destroy
       agent { label 'molecule-ecs' }
       steps {
         checkout scm
-        withCredentials([
+        dir('.pipeline') {
+          withCredentials([
           usernamePassword(
-            credetialsId: 'uefadevops+quaybot/',
+            credentialsId: 'uefadevops+quaybot/',
             usernameVariable: 'QUAY_USERNAME',
             passwordVariable: 'QUAY_PASSWORD' )
           ]) {
-          sh '''
+            sh '''
 .  /opt/virtualenv/molecule3/bin/activate
 packer build
 docker login -u="${QUAY_USERNAME}" -p="${QUAY_PASSWORD}" quay.io
 docker push quay.io/uefadevops/molecule-build-agent
 docker logout
               '''
-        } // credentials
+          } // credentials
+        } // dir
       } // steps
     } // bake stage
   } // stages

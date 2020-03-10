@@ -53,3 +53,6 @@ build-iPhoneSimulator/
 
 # Ignore junit results
 junit.xml
+
+# Ignore packer manifests
+.pipeline/manifest.json

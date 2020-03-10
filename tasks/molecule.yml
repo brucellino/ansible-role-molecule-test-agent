@@ -1,0 +1,34 @@
+---
+- name: Create virtualenv dir
+  file:
+    path: /opt/virtualenv
+    group: root
+    state: directory
+    mode: 0755
+    owner: root
+
+- name: Create virtualenv for Python3
+  command: "virtualenv molecule -p python3"
+  args:
+    creates: /opt/virtualenv/molecule/bin/activate
+    chdir: /opt/virtualenv
+
+- name: Ship requirements
+  template:
+    dest: "/opt/virtualenv/{{ item }}/requirements.txt"
+    src: requirements.txt.j2
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+  loop:
+    - molecule
+
+- name: Ensure Molecule
+  pip:
+    virtualenv: "/opt/virtualenv/{{ item }}"
+    virtualenv_command: virtualenv
+    requirements: "/opt/virtualenv/{{ item }}/requirements.txt"
+    state: present
+  loop:
+    - molecule

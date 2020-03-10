@@ -1,0 +1,20 @@
+- name: Get Inspec executable (Debian)
+  apt:
+    update_cache: true
+    deb: "https://packages.chef.io/files/stable/inspec/{{ inspec_version }}/ubuntu/18.04/inspec_{{ inspec_version }}-1_amd64.deb"
+    cache_valid_time: 0
+    #  dpkg_options: force-confdef,force-confold
+    autoclean: true
+    allow_unauthenticated: true
+    state: present
+    install_recommends: true
+  when: ansible_os_family | lower == 'debian'
+
+- name: Get Inspec executable (RedHat)
+  yum:
+    update_cache: true
+    name: https://packages.chef.io/files/stable/inspec/{{ inspec_version }}/el/7/inspec-{{ inspec_version }}-1.el7.x86_64.rpm
+    disable_gpg_check: true
+    state: present
+    validate_certs: true
+  when: ansible_os_family | lower == 'redhat'
