@@ -6,7 +6,7 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
     os.environ['MOLECULE_INVENTORY_FILE']
 ).get_hosts('all')
 dev_sec_profile = 'dev-sec/linux-baseline'
-ansible_test_command = '. /opt/virtualenv/molecule3/bin/activate ' \
+ansible_test_command = '. /opt/virtualenv/molecule/bin/activate ' \
     + ' ; ansible --version'
 
 
@@ -70,7 +70,7 @@ def test_ansible(host):
     assert 'ansible' in host.pip_package.\
         get_packages(pip_path='/opt/virtualenv/molecule/bin/pip')
     assert 'ansible' in host.pip_package.\
-        get_packages(pip_path='/opt/virtualenv/molecule3/bin/pip')
+        get_packages(pip_path='/opt/virtualenv/molecule/bin/pip')
 
     ansible_command = host.run(ansible_test_command)
     assert ansible_command.rc == 0
