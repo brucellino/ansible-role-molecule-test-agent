@@ -26,12 +26,18 @@ pipeline {
               secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
             dir('ansible-role-molecule-test-agent') {
               sh '''
-  . /opt/virtualenv/molecule3/bin/activate
+  . /opt/virtualenv/molecule/bin/activate
   molecule lint -s ec2
   molecule --debug converge -s ec2
   molecule verify -s ec2
               '''
             }// dir
+            dir('ansible-role-molecule-test-agent/.pipeline') {
+              sh '''
+. /opt/virtualenv/molecule/bin/activate
+packer validate .pipeline/packer.json
+                  '''
+            }
           } // credentials
         } // steps
         post {
