@@ -68,19 +68,21 @@ molecule -s ec2 destroy
         branch 'master'
         beforeAgent true
       }
-      agent { label 'molecule-agent' }
+      agent { label 'ec2-bionic' }
       steps {
         checkout scm
         dir('.pipeline') {
-          withCredentials([
+          withCredentials([[
+            $class: 'AmazonWebServicesCredentialsBinding',
+            credentialsId: 'aws_infra_credential',
+            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'],
           usernamePassword(
             credentialsId: 'uefadevops+quaybot',
             usernameVariable: 'QUAY_USERNAME',
-            passwordVariable: 'QUAY_PASSWORD' )
-          ]) {
+            passwordVariable: 'QUAY_PASSWORD' )]) {
             sh '''
-.  /opt/virtualenv/molecule/bin/activate
-packer build
+packer build packer.json
 docker login -u="${QUAY_USERNAME}" -p="${QUAY_PASSWORD}" quay.io
 docker push quay.io/uefadevops/molecule-build-agent
 docker logout
