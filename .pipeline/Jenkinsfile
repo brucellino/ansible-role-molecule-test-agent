@@ -1,6 +1,6 @@
 pipeline {
   options {
-    checkoutToSubdirectory('ansible-role-molecule-test-agent')
+    checkoutToSubdirectory 'ansible-role-molecule-test-agent'
   }
   agent none
   environment {
@@ -16,7 +16,6 @@ pipeline {
         stage('EC2') {
           agent { label 'molecule-ecs' }
           steps {
-            checkout scm
             sh 'ls -la'
             sh 'pwd'
             echo 'Lint stage'
@@ -25,10 +24,14 @@ pipeline {
               accessKeyVariable: 'AWS_ACCESS_KEY_ID',
               credentialsId: 'aws_sandbox_credentials_jenkins',
               secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-            sh '''
+            dir('ansible-role-molecule-test-agent') {
+              sh '''
   . /opt/virtualenv/molecule3/bin/activate
   molecule lint -s ec2
-            '''
+  molecule --debug converge -s ec2
+  molecule verify -s ec2
+              '''
+            }// dir
           } // credentials
         } // steps
         post {
@@ -42,19 +45,21 @@ pipeline {
         } // post
       } // stage
       stage('Docker') {
-        agent { label 'molecule-ecs' }
+        agent { label 'ec2-bionic' }
         steps {
-          checkout scm
-          sh '''
-. /opt/virtualenv/molecule/bin/activate
-molecule lint -s ec2
-          '''
+          dir('ansible-role-molecule-test-agent') {
+            sh '''
+pip install molecule[docker]
+molecule lint
+molecule converge
+molecule verify
+            '''
+            } // dir
           } // steps
           post {
             always {
               sh '''
-. /opt/virtualenv/molecule3/bin/activate
-molecule destroy -s ec2
+molecule destroy
                 '''
             } // always post
           } // post
@@ -68,8 +73,9 @@ molecule destroy -s ec2
       }
       agent { label 'ec2-bionic' }
       steps {
-        checkout scm
-        dir('.pipeline') {
+        dir('ansible-role-molecule-test-agent/.pipeline') {
+          sh 'ls'
+          sh 'pwd'
           withCredentials([[
             $class: 'AmazonWebServicesCredentialsBinding',
             credentialsId: 'aws_infra_credential',
