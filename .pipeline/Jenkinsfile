@@ -27,9 +27,9 @@ pipeline {
               secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
             sh '''
   . /opt/virtualenv/molecule3/bin/activate
-  molecule -s ec2 lint
-  molecule -s ec2 converge
-  molecule -s ec2 verify
+  molecule lint -s ec2
+  molecule converge -s ec2
+  molecule verify -s ec2
             '''
           } // credentials
         } // steps
