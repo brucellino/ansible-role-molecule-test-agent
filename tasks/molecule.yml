@@ -15,20 +15,16 @@
 
 - name: Ship requirements
   template:
-    dest: "/opt/virtualenv/{{ item }}/requirements.txt"
+    dest: "/opt/virtualenv/molecule/requirements.txt"
     src: requirements.txt.j2
     owner: root
     group: root
     mode: 0644
     backup: true
-  loop:
-    - molecule
 
 - name: Ensure Molecule
   pip:
-    virtualenv: "/opt/virtualenv/{{ item }}"
+    virtualenv: "/opt/virtualenv/molecule"
     virtualenv_command: virtualenv
-    requirements: "/opt/virtualenv/{{ item }}/requirements.txt"
+    requirements: "/opt/virtualenv/molecule/requirements.txt"
     state: present
-  loop:
-    - molecule

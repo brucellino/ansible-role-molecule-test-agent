@@ -36,8 +36,20 @@ prerequisites:
     - curl
 # Inspec version
 inspec_version: 4.16.0
-# Ansible and friends
-molecule_version: 2.22
+# pips
+pip_packages:
+  - name: molecule
+    version: 2.22
+  - name: ansible
+    version: 2.9.2
+  - name: testinfra
+    version: 3.1.0
+  - name: boto3
+    version: 1.9.117
+  - name: boto
+    version: 2.49.0
+  - name: botocore
+    version: 1.12.117
 # RVM maintainer keys that should be present
 rvm_gpg_keys:
   - mpapis.asc

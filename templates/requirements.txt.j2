@@ -1,2 +1,4 @@
 pip
-molecule=={{ molecule_version }}
+{% for pip in pip_packages %}
+{{ pip.name}}=={{ pip.version }}
+{% endfor %}
