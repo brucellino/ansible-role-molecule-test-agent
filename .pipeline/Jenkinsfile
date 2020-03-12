@@ -22,7 +22,7 @@ pipeline {
             withCredentials([[
               $class: 'AmazonWebServicesCredentialsBinding',
               accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-              credentialsId: 'aws_infra_credential',
+              credentialsId: 'aws_sandbox_credentials_jenkins',
               secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
             dir('ansible-role-molecule-test-agent') {
               sh '''
