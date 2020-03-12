@@ -1,5 +1,5 @@
 import os
-from distutils.version import StrictVersion, LooseVersion
+from distutils.version import LooseVersion
 import testinfra.utils.ansible_runner
 import pytest
 testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
@@ -22,22 +22,35 @@ def test_connectivity(host):
         assert supermarket.port(port).is_reachable
 
 
-@pytest.mark.parmetrize('good_pythons', [
+@pytest.mark.parametrize('good_python', [
     'python3',
     'pip3'])
-@pytest.mark.parametrize('bad_pythons', [
+@pytest.mark.parametrize('bad_python', [
     'python2',
     'pip2'])
-def python(good_pythons, bad_pythons, host):
+def test_python(good_python, bad_python, host):
     '''
     Check that python is present and that it is the right version
     '''
-    python = host.package('python')
+    python = host.package('python3')
     assert python.is_installed
-    assert host.exists('python')
-    assert host.exists(good_pythons)
-    assert not host.exists(bad_pythons)
-    assert LooseVersion(python.version) >= StrictVersion('3.6')
+    assert host.exists(good_python)
+    # assert not host.exists(bad_python)
+    assert LooseVersion(python.version) >= LooseVersion('3.6')
+
+
+@pytest.mark.parametrize('pip', [
+    'boto',
+    'boto3',
+    'botocore'
+])
+def test_pips(host, pip):
+    '''
+    Check that the required pip packages are present
+    '''
+
+    assert pip in host.pip_package.get_packages(
+        pip_path='/opt/virtualenv/molecule/bin/pip')
 
 
 def test_inspec(host):
