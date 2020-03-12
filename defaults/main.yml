@@ -36,8 +36,14 @@ prerequisites:
     - curl
 # Inspec version
 inspec_version: 4.16.0
-# Ansible and friends
-molecule_version: 2.22
+# pips
+pip_packages:
+  - name: molecule
+    version: 2.22
+  - name: ansible
+    version: 2.9.2
+  - name: testinfra
+    version: 3.1.0
 # RVM maintainer keys that should be present
 rvm_gpg_keys:
   - mpapis.asc

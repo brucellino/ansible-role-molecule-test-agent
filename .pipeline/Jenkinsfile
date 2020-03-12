@@ -22,14 +22,17 @@ pipeline {
             withCredentials([[
               $class: 'AmazonWebServicesCredentialsBinding',
               accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-              credentialsId: 'aws_sandbox_credentials_jenkins',
+              credentialsId: 'aws_infra_credential',
               secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
             dir('ansible-role-molecule-test-agent') {
               sh '''
-  . /opt/virtualenv/molecule/bin/activate
-  molecule lint -s ec2
-  molecule --debug converge -s ec2
-  molecule verify -s ec2
+. /opt/virtualenv/molecule/bin/activate
+python --version
+which python3
+which python2
+molecule lint -s ec2
+molecule --debug converge -s ec2
+molecule verify -s ec2
               '''
             }// dir
             dir('ansible-role-molecule-test-agent/.pipeline') {
@@ -42,11 +45,12 @@ packer validate .pipeline/packer.json
         } // steps
         post {
           always {
-            junit 'molecule/ec2/*.xml'
-            sh '''
-  . /opt/virtualenv/molecule3/bin/activate
-  molecule destroy -s ec2
-            '''
+            dir('ansible-role-molecule-test-agent') {
+              junit 'molecule/ec2/*.xml'
+              sh '''
+molecule destroy -s ec2
+                '''
+            } // dir
           } // always post
         } // post
       } // stage
@@ -55,7 +59,7 @@ packer validate .pipeline/packer.json
         steps {
           dir('ansible-role-molecule-test-agent') {
             sh '''
-pip install molecule[docker]
+sudo pip install "ansible==2.9.2" "testinfra==3.1.0" "molecule==2.22"
 molecule lint
 molecule converge
 molecule verify
@@ -64,9 +68,12 @@ molecule verify
           } // steps
           post {
             always {
-              sh '''
+              dir('ansible-role-molecule-test-agent') {
+                junit 'molecule/default/*.xml'
+                sh '''
 molecule destroy
-                '''
+                  '''
+              } // dir
             } // always post
           } // post
         } // stage

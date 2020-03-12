@@ -7,9 +7,9 @@ lint:
   name: yamllint
 platforms:
   - name: ubuntu-18.10-instance
-    image: ami-0ca54ebdb2e62512e
+    image: ami-0718a1ae90971ce4d
     instance_type: t2.medium
-    vpc_subnet_id: subnet-fda20880
+    vpc_subnet_id: subnet-91a4d6fa
     instance_tags:
       - Name: "molecule"
 provisioner:
