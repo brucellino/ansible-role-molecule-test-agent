@@ -1,3 +1,8 @@
+def slackResponse = slackSend(
+  channel: "#devops-ansible-roles",
+  message: "Ansible role molecule test agent build started",
+  tokenCredentialId: 'slack_bot_token',
+  teamDomain: 'bots-bots-bots')
 pipeline {
   options {
     checkoutToSubdirectory 'ansible-role-molecule-test-agent'
@@ -16,6 +21,11 @@ pipeline {
         stage('EC2') {
           agent { label 'molecule-ecs' }
           steps {
+            slackSend(
+              channel: slackResponse.threadId,
+              message: "Testing EC2",
+              tokenCredentialId: 'slack_bot_token',
+              teamDomain: 'bots-bots-bots')
             sh 'ls -la'
             sh 'pwd'
             echo 'Lint stage'
@@ -52,11 +62,30 @@ molecule destroy -s ec2
                 '''
             } // dir
           } // always post
+          success {
+            slackSend(
+              channel: slackResponse.threadId,
+              message: "EC2 scenario passed",
+              tokenCredentialId: 'slack_bot_token',
+              teamDomain: 'bots-bots-bots')
+          }
+          failure {
+            slackSend(
+              channel: slackResponse.threadId,
+              message: "EC2 scenario failed",
+              tokenCredentialId: 'slack_bot_token',
+              teamDomain: 'bots-bots-bots')
+          }
         } // post
       } // stage
       stage('Docker') {
         agent { label 'ec2-bionic' }
         steps {
+          slackSend(
+            channel: slackResponse.threadId,
+            message: "Testing Docker scenario",
+            tokenCredentialId: 'slack_bot_token',
+            teamDomain: 'bots-bots-bots')
           dir('ansible-role-molecule-test-agent') {
             sh '''
 molecule lint
@@ -75,6 +104,20 @@ molecule destroy
                   '''
               } // dir
             } // always post
+            success {
+              slackSend(
+                channel: slackResponse.threadId,
+                message: "Docker scenario passed",
+                tokenCredentialId: 'slack_bot_token',
+                teamDomain: 'bots-bots-bots')
+            }
+            failure {
+              slackSend(
+                channel: slackResponse.threadId,
+                message: "Docker scenario failed",
+                tokenCredentialId: 'slack_bot_token',
+                teamDomain: 'bots-bots-bots')
+            }
           } // post
         } // stage
       } // parallel test stage
@@ -86,9 +129,12 @@ molecule destroy
       }
       agent { label 'ec2-bionic' }
       steps {
+        slackSend(
+            channel: slackResponse.threadId,
+            message: "Starting bake",
+            tokenCredentialId: 'slack_bot_token',
+            teamDomain: 'bots-bots-bots')
         dir('ansible-role-molecule-test-agent/.pipeline') {
-          sh 'ls'
-          sh 'pwd'
           withCredentials([[
             $class: 'AmazonWebServicesCredentialsBinding',
             credentialsId: 'aws_infra_credential',
@@ -100,6 +146,7 @@ molecule destroy
             passwordVariable: 'QUAY_PASSWORD' )]) {
             sh '''
 packer build packer.json
+sudo apt-get install -y gnupg2 pass
 docker login -u="${QUAY_USERNAME}" -p="${QUAY_PASSWORD}" quay.io
 docker push quay.io/uefadevops/molecule-build-agent
 docker logout
@@ -109,4 +156,22 @@ docker logout
       } // steps
     } // bake stage
   } // stages
+  post {
+    success {
+      slackSend(
+        channel: slackResponse.threadId,
+        message: "Molecule build agent artifacts created",
+        tokenCredentialId: 'slack_bot_token',
+        color: 'good',
+        teamDomain: 'bots-bots-bots')
+    }
+    failure {
+      slackSend(
+        channel: slackResponse.threadId,
+        message: "Molecule build agent pipeline failed",
+        tokenCredentialId: 'slack_bot_token',
+        color: 'warn',
+        teamDomain: 'bots-bots-bots')
+    }
+  } // post
 } // pipeline
