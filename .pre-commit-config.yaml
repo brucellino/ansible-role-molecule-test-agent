@@ -1,0 +1,32 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: detect-private-key
+      - id: flake8
+  - repo: https://github.com/prettier/prettier
+    rev: master
+    hooks:
+      - id: prettier
+        entry: prettier --write --prose-wrap=always *.md
+  - repo: https://github.com/jumanjihouse/pre-commit-hooks
+    rev: master
+    hooks:
+      - id: rubocop
+  - repo: https://github.com/ansible/ansible-lint.git
+    rev: v4.1.0
+    hooks:
+      - id: ansible-lint
+        files: (defaults|handlers|meta|tasks|templates|vars)/\.(yaml|yml)$
+  - repo: git@github.com:Yelp/detect-secrets
+    rev: v0.13.0
+    hooks:
+      - id: detect-secrets
+  - repo: https://github.com/psf/black
+    rev: stable
+    hooks:
+      - id: black
+        language_version: python3.6
