@@ -1,13 +1,14 @@
 # Molecule Test Agent
 
-This role provisions an environment in which to test Ansible roles.
-In order to test Ansible roles, you probably want to do a few things:
+This role provisions an environment in which to test Ansible roles. In order to
+test Ansible roles, you probably want to do a few things:
 
 1. Ensure adherence to a style guide
 2. Ensure proper code and quality checks
 3. Ensure functional test coverage
 
-This role provides the execution environment for running these tasks, typically in a containerised environment.
+This role provides the execution environment for running these tasks, typically
+in a containerised environment.
 
 The role adds the following tools:
 
@@ -65,11 +66,14 @@ Then write your playbook to use it.
 
 ## Artefacts
 
-Beware: circular dependency ! **This role uses artifacts produced by itself to test itself**.
-In order to execute the continuous delivery pipeline, an execution agent is needed _with the same environment that this role expresses_.
-This is a bootstrapping problem which needs to be broken the first time by executing the build and delivery by hand.
+Beware: circular dependency ! **This role uses artifacts produced by itself to
+test itself**. In order to execute the continuous delivery pipeline, an
+execution agent is needed _with the same environment that this role expresses_.
+This is a bootstrapping problem which needs to be broken the first time by
+executing the build and delivery by hand.
 
-[Packer](https://packer.io) is used to create executable artefacts in different envrionments (AWS, Docker)
+[Packer](https://packer.io) is used to create executable artefacts in different
+envrionments (AWS, Docker)
 
 ## License
 
