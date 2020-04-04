@@ -15,5 +15,4 @@
 - name: Ensure docker repo GPG key
   apt_key:
     url: "{{ docker_repo_key }}"
-    id: docker
     state: present

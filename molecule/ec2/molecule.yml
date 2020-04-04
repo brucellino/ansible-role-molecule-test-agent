@@ -25,4 +25,5 @@ verifier:
     name: flake8
   options:
     junit-xml: junit.xml
-  directory: ../default/tests/
+    n: 20
+  directory: ../default/

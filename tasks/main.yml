@@ -1,7 +1,13 @@
 ---
 # tasks file for ansible-role-molecule-test-agent
+- name: debug virtualization
+  debug:
+    msg: |-
+      Role: {{ ansible_virtualization_role }}
+      Type: {{ansible_virtualization_type }}
+
 - include_tasks: security.yml
-  when: (ansible_virtualization_role != 'guest' and ansible_virtualization_type != 'docker')
+  when: ansible_virtualization_type != 'docker'
 
 - name: Ensure prerequisites
   package:
@@ -9,8 +15,20 @@
     name: "{{ item }}"
   loop: "{{ prerequisites[ansible_os_family | lower ] }}"
 
+- include_tasks: docker.yml
+  when: ansible_virtualization_type != 'docker'
+  tags:
+    - docker
+
 - include_tasks: ruby.yml
+  tags:
+    - ruby
+    - languages
 
 - include_tasks: inspec.yml
+  tags:
+    - inspec
 
 - include_tasks: molecule.yml
+  tags:
+    - molecule

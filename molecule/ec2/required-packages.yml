@@ -1,28 +1,19 @@
 ---
 required_packages:
-  - accountsservice
   - acl
-  - acpid
-  - adduser
-  - apparmor
-  - apt
   - apt-transport-https
   - apt-utils
-  - at-spi2-core
   - aufs-tools
   - autoconf
-  - automake
   - autopoint
   - base-files
   - base-passwd
   - bash
   - bash-completion
   - bc
-  - bind9-host
   - binutils
   - binutils-common:amd64
   - binutils-x86-64-linux-gnu
-  - bsdmainutils
   - bsdutils
   - btrfs-progs
   - btrfs-tools
@@ -34,11 +25,9 @@ required_packages:
   - cgroupfs-mount
   - cloud-guest-utils
   - cloud-init
-  - containerd.io
   - coreutils
   - cpio
   - cpp
-  - cpp-7
   - cron
   - cryptsetup
   - cryptsetup-bin
@@ -52,14 +41,9 @@ required_packages:
   - debconf-i18n
   - debhelper
   - debianutils
-  - default-jdk
-  - default-jre
-  - dh-autoreconf
-  - dh-python
   - diffutils
   - dirmngr
   - distro-info-data
-  - dmeventd
   - dmidecode
   - dmsetup
   - dns-root-data
@@ -76,7 +60,6 @@ required_packages:
   - fakeroot
   - file
   - findutils
-  - fuse
   - g++
   - g++-7
   - gawk
@@ -108,7 +91,6 @@ required_packages:
   - hdparm
   - hibagent
   - hostname
-  - info
   - init
   - init-system-helpers
   - initramfs-tools
@@ -123,7 +105,6 @@ required_packages:
   - isc-dhcp-client
   - isc-dhcp-common
   - iso-codes
-  - java-common
   - kbd
   - login
   - logrotate
@@ -140,7 +121,8 @@ required_packages:
   - make
   - man-db
   - manpages
-  - manpages-dev
+  - lsb-invalid-mta
+  - lsb-security
   - mawk
   - mdadm
   - mime-support
@@ -178,7 +160,6 @@ required_packages:
   - perl-modules-5.26
   - pinentry-curses
   - policykit-1
-  - pollinate
   - popularity-contest
   - powermgmt-base
   - procps
