@@ -67,7 +67,17 @@ docker_bad:
     - docker.io
     - containerd
     - runc
-docker_repo_key: https://download.docker.com/linux/ubuntu/gpg
+docker_good:
+  debian:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+
+docker_url: https://download.docker.com/linux
+docker_repo_key: "{{ docker_url }}/{{ ansible_distribution | lower }}/gpg"
+docker_repo_string:
+  "deb [arch=amd64] {{ docker_url }}/{{ ansible_distribution |lower }} {{
+  ansible_distribution_release | lower }} stable"
 # Inspec version
 inspec_version: 4.16.0
 # pips

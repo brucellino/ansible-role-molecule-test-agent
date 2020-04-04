@@ -16,3 +16,24 @@
   apt_key:
     url: "{{ docker_repo_key }}"
     state: present
+
+- name: Debug repo string
+  debug:
+    msg: "{{ docker_repo_string }}"
+  tags:
+    - docker
+
+- name: Ensure Docker Repo Enabled
+  apt_repository:
+    repo: "{{ docker_repo_string }}"
+    state: present
+    filename: docker
+    # update_cache: true
+  tags:
+    - docker
+
+- name: Ensure Docker Good is present
+  package:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ docker_good[ansible_os_family | lower ]}}"
