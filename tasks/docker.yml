@@ -1,0 +1,19 @@
+---
+# Tasks for installing Docker
+- name: Ensure Docker prerequisites
+  package:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ docker_prerequisites[ansible_os_family | lower]}}"
+
+- name: Ensure old docker is absent
+  package:
+    name: "{{ item }}"
+    state: absent
+  loop: "{{ docker_bad[ansible_os_family | lower]}}"
+
+- name: Ensure docker repo GPG key
+  apt_key:
+    url: "{{ docker_repo_key }}"
+    id: docker
+    state: present
