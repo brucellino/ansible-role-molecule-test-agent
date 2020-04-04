@@ -7,7 +7,6 @@ required_packages:
   - autoconf
   - autopoint
   - base-files
-  - base-passwd
   - bash
   - bash-completion
   - bc
@@ -192,7 +191,6 @@ required_packages:
   - wget
   - whiptail
   - x11-common
-  - x11-utils
   - xauth
   - xz-utils
   - zlib1g

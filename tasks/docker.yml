@@ -4,13 +4,13 @@
   package:
     name: "{{ item }}"
     state: present
-  loop: "{{ docker_prerequisites[ansible_os_family | lower]}}"
+  loop: "{{ docker_prerequisites[ ansible_os_family | lower ] }}"
 
 - name: Ensure old docker is absent
   package:
     name: "{{ item }}"
     state: absent
-  loop: "{{ docker_bad[ansible_os_family | lower]}}"
+  loop: "{{ docker_bad[ ansible_os_family | lower ] }}"
 
 - name: Ensure docker repo GPG key
   apt_key:
@@ -28,7 +28,7 @@
     repo: "{{ docker_repo_string }}"
     state: present
     filename: docker
-    # update_cache: true
+    update_cache: true
   tags:
     - docker
 
@@ -36,4 +36,4 @@
   package:
     name: "{{ item }}"
     state: present
-  loop: "{{ docker_good[ansible_os_family | lower ]}}"
+  loop: "{{ docker_good[ ansible_os_family | lower ] }}"
