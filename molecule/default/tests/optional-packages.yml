@@ -1,6 +1,7 @@
 ---
 optional_packages:
   - autotools-dev
+  - base-passwd
   - command-not-found
   - command-not-found-data
   - eatmydata
@@ -137,3 +138,4 @@ optional_packages:
   - mailutils-common
   - jq
   - javascript-common
+  - x11-utils

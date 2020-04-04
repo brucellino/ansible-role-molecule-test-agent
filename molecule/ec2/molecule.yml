@@ -27,4 +27,4 @@ verifier:
       ignore: "E501"
   options:
     junit-xml: junit.xml
-    n: 10
+    n: 5
