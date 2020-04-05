@@ -1,8 +1,8 @@
 def slackResponse = slackSend(
-  channel: "#devops-ansible-roles",
-  message: "Ansible role molecule test agent build started",
-  tokenCredentialId: 'slack_bot_token',
-  teamDomain: 'bots-bots-bots')
+    channel: "#devops-ansible-roles",
+    message: "Ansible role molecule test agent build started",
+    tokenCredentialId: 'slack_bot_token')
+
 pipeline {
   options {
     checkoutToSubdirectory 'ansible-role-molecule-test-agent'
@@ -21,11 +21,10 @@ pipeline {
         stage('EC2') {
           agent { label 'molecule-ecs' }
           steps {
-            slackSend(
-              channel: slackResponse.threadId,
-              message: "Testing EC2",
-              tokenCredentialId: 'slack_bot_token',
-              teamDomain: 'bots-bots-bots')
+            slackSend channel: slackResponse.threadId,
+                      message: "Testing EC2",
+                      tokenCredentialId: 'slack_bot_token'
+
             sh 'ls -la'
             sh 'pwd'
             echo 'Lint stage'

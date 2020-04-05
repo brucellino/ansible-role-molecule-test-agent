@@ -38,7 +38,6 @@ prerequisites:
     - tmux
     - tree
     - tzdata
-    - golang-docker-credential-helpers
     - aufs-tools
     - busybox-static
   redhat:
@@ -67,6 +66,7 @@ docker_bad:
     - docker.io
     - containerd
     - runc
+    - golang-docker-credential-helpers
 docker_good:
   debian:
     - docker-ce
