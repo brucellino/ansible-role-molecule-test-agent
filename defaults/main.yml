@@ -72,6 +72,7 @@ docker_good:
     - docker-ce
     - docker-ce-cli
     - containerd.io
+    - golang-docker-credential-helpers
 
 docker_url: https://download.docker.com/linux
 docker_repo_key: "{{ docker_url }}/{{ ansible_distribution | lower }}/gpg"
