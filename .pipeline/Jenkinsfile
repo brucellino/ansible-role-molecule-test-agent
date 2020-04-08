@@ -33,18 +33,12 @@ pipeline {
                 dir('ansible-role-molecule-test-agent') {
                   sh '''
 . /opt/virtualenv/molecule/bin/activate
-pip install -U PyYAML
+pip install -r molecule-requirements.txt
 molecule lint -s ec2
 molecule --debug converge -s ec2
 molecule verify -s ec2
               '''
             }// dir
-            dir('ansible-role-molecule-test-agent/.pipeline') {
-              sh '''
-. /opt/virtualenv/molecule/bin/activate
-packer validate .pipeline/packer.json
-                  '''
-            }
           } // credentials
         } // steps
         post {
@@ -82,7 +76,7 @@ molecule destroy -s ec2
             teamDomain: 'bots-bots-bots')
           dir('ansible-role-molecule-test-agent') {
             sh '''
-sudo pip install "ansible==2.9.2" "testinfra==3.1.0" "boto3==1.9.117" "boto==2.49.0" "botocore==1.12.117" "molecule==2.22" "PyYAML==5.3.1"
+sudo pip install -r molecule-requirements.txt
 molecule lint
 molecule converge
 molecule verify
@@ -139,8 +133,8 @@ molecule destroy
             usernameVariable: 'QUAY_USERNAME',
             passwordVariable: 'QUAY_PASSWORD' )]) {
             sh '''
+packer validate .pipeline/packer.json
 packer build packer.json
-sudo apt-get install -y gnupg2 pass
 docker login -u="${QUAY_USERNAME}" -p="${QUAY_PASSWORD}" quay.io
 docker push quay.io/uefadevops/molecule-build-agent
 docker logout
