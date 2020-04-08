@@ -7,7 +7,7 @@ lint:
   name: yamllint
 platforms:
   - name: ubuntu-18.10-instance
-    image: ami-0718a1ae90971ce4d
+    image: ami-0b6f46ba4d94838a0
     instance_type: t2.medium
     vpc_subnet_id: subnet-91a4d6fa
     instance_tags:

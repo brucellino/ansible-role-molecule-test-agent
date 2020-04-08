@@ -1,6 +1,7 @@
 ---
 optional_packages:
   - pass
+  - lsb-security
   - qrencode
   - autotools-dev
   - base-passwd

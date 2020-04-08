@@ -131,7 +131,6 @@ required_packages:
   - lsb-core
   - lsb-invalid-mta
   - lsb-release
-  - lsb-security
   - lsof
   - ltrace
   - lxcfs

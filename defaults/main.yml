@@ -23,7 +23,6 @@ prerequisites:
     - lsb-base
     - lsb-core
     - lsb-release
-    - lsb-security
     - openssl
     - build-essential
     - cryptsetup
