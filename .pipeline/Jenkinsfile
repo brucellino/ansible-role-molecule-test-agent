@@ -1,6 +1,6 @@
 def slackResponse = slackSend(
     channel: "#devops-ansible-roles",
-    message: "Ansible role molecule test agent build started",
+    message: "Ansible role molecule test agent build started ",
     tokenCredentialId: 'slack_bot_token')
 
 pipeline {
@@ -22,7 +22,7 @@ pipeline {
           agent { label 'molecule-ecs' }
           steps {
             slackSend channel: slackResponse.threadId,
-                      message: "Testing EC2",
+                      message: "Testing EC2 scenario  (<${env.BUILD_URL}|Open>)",
                       tokenCredentialId: 'slack_bot_token'
             echo 'Test EC2 scenario'
             withCredentials([
@@ -33,7 +33,6 @@ pipeline {
                 dir('ansible-role-molecule-test-agent') {
                   sh '''
 . /opt/virtualenv/molecule/bin/activate
-pip install -r .pipeline/molecule-requirements.txt
 molecule lint -s ec2
 molecule converge -s ec2
 molecule verify -s ec2
@@ -51,13 +50,13 @@ molecule verify -s ec2
           success {
             slackSend(
               channel: slackResponse.threadId,
-              message: "EC2 scenario passed",
+              message: "EC2 scenario passed  (<${env.BUILD_URL}|Open>)",
               tokenCredentialId: 'slack_bot_token')
           }
           failure {
             slackSend(
               channel: slackResponse.threadId,
-              message: "EC2 scenario failed",
+              message: "EC2 scenario failed  (<${env.BUILD_URL}|Open>)",
               tokenCredentialId: 'slack_bot_token')
           }
         } // post
@@ -67,11 +66,11 @@ molecule verify -s ec2
         steps {
           slackSend(
             channel: slackResponse.threadId,
-            message: "Testing Docker scenario",
+            message: "Testing Docker scenario  (<${env.BUILD_URL}|Open>)",
             tokenCredentialId: 'slack_bot_token')
           dir('ansible-role-molecule-test-agent') {
             sh '''
-sudo pip install -r .pipeline/molecule-requirements.txt
+. /opt/virtualenv/molecule/bin/activate
 molecule lint
 molecule converge
 molecule verify
@@ -90,13 +89,13 @@ molecule destroy
             success {
               slackSend(
                 channel: slackResponse.threadId,
-                message: "Docker scenario passed",
+                message: "Docker scenario passed  (<${env.BUILD_URL}|Open>)",
                 tokenCredentialId: 'slack_bot_token')
             }
             failure {
               slackSend(
                 channel: slackResponse.threadId,
-                message: "Docker scenario failed",
+                message: "Docker scenario failed  (<${env.BUILD_URL}|Open>)",
                 tokenCredentialId: 'slack_bot_token')
             }
           } // post
@@ -138,13 +137,13 @@ docker logout
   post {
     success {
       slackSend channel: slackResponse.threadId,
-                message: "Molecule build agent artifacts created",
+                message: "Molecule build agent artifacts created  (<${env.BUILD_URL}|Open>)",
                 tokenCredentialId: 'slack_bot_token',
                 color: 'good'
     }
     failure {
       slackSend channel: slackResponse.threadId,
-                message: "Molecule build agent pipeline failed",
+                message: "Molecule build agent pipeline failed  (<${env.BUILD_URL}|Open>)",
                 tokenCredentialId: 'slack_bot_token',
                 color: 'danger'
     }
