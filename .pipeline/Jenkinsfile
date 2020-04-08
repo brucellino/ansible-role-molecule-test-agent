@@ -24,21 +24,16 @@ pipeline {
             slackSend channel: slackResponse.threadId,
                       message: "Testing EC2",
                       tokenCredentialId: 'slack_bot_token'
-
-            sh 'ls -la'
-            sh 'pwd'
-            echo 'Lint stage'
-            withCredentials([[
-              $class: 'AmazonWebServicesCredentialsBinding',
-              accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-              credentialsId: 'aws_sandbox_credentials_jenkins',
-              secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-            dir('ansible-role-molecule-test-agent') {
-              sh '''
+            echo 'Test EC2 scenario'
+            withCredentials([
+              [$class: 'AmazonWebServicesCredentialsBinding',
+                accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                credentialsId: 'aws_sandbox_credentials_jenkins',
+                secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                dir('ansible-role-molecule-test-agent') {
+                  sh '''
 . /opt/virtualenv/molecule/bin/activate
-python --version
-which python3
-which python2
+pip install -U PyYAML
 molecule lint -s ec2
 molecule --debug converge -s ec2
 molecule verify -s ec2
@@ -87,8 +82,8 @@ molecule destroy -s ec2
             teamDomain: 'bots-bots-bots')
           dir('ansible-role-molecule-test-agent') {
             sh '''
+sudo pip install "ansible==2.9.2" "testinfra==3.1.0" "boto3==1.9.117" "boto==2.49.0" "botocore==1.12.117" "molecule==2.22" "PyYAML==5.3.1"
 molecule lint
-sudo pip install "ansible==2.9.2" "testinfra==3.1.0" "boto3==1.9.117" "boto==2.49.0" "botocore==1.12.117" "molecule==2.22"
 molecule converge
 molecule verify
             '''
