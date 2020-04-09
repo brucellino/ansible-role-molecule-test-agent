@@ -62,7 +62,7 @@ molecule verify -s ec2
         } // post
       } // stage
       stage('Docker') {
-        agent { label 'ec2-bionic' }
+        agent { label 'molecule-sandbox' }
         steps {
           slackSend(
             channel: slackResponse.threadId,
@@ -101,6 +101,37 @@ molecule destroy
             }
           } // post
         } // stage
+        stage('Bootstrap') {
+          agent { label 'ec2-bionic' }
+          steps {
+            slackSend(
+              channel: slackResponse.threadId,
+              message: "Testing Docker scenario  (<${env.BUILD_URL}|Open>)",
+              tokenCredentialId: 'slack_bot_token')
+            dir('ansible-role-molecule-test-agent') {
+              sh 'which pip'
+              sh 'which pip3'
+              sh 'which virtualenv'
+              } // dir
+            } // steps
+            post {
+              always {
+                echo 'INFO: Always executed post actions'
+              } // always post
+              success {
+                slackSend(
+                  channel: slackResponse.threadId,
+                  message: "Bootstrap scenario passed  (<${env.BUILD_URL}|Open>)",
+                  tokenCredentialId: 'slack_bot_token')
+              }
+              failure {
+                slackSend(
+                  channel: slackResponse.threadId,
+                  message: "Bootstrap scenario failed  (<${env.BUILD_URL}|Open>)",
+                  tokenCredentialId: 'slack_bot_token')
+              }
+            } // post
+          } // stage
       } // parallel test stage
     } // Test stage
     stage('Bake') {
