@@ -37,14 +37,13 @@ def test_python(good_python, bad_python, host):
     assert LooseVersion(python.version) >= LooseVersion("3.6")
 
 
-@pytest.mark.parametrize(
-    "pip", [
-        "boto",
-        "boto3",
-        "botocore",
-        "molecule",
-        "ansible",
-        "docker"])
+@pytest.mark.parametrize("pip", [
+    "boto",
+    "boto3",
+    "botocore",
+    "molecule",
+    "ansible",
+    "docker"])
 def test_pips(host, pip):
     """
     Check that the required pip packages are present
