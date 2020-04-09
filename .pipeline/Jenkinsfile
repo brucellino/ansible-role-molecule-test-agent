@@ -25,11 +25,11 @@ pipeline {
                       message: "Testing EC2 scenario  (<${env.BUILD_URL}|Open>)",
                       tokenCredentialId: 'slack_bot_token'
             echo 'Test EC2 scenario'
-            withCredentials([
-              [$class: 'AmazonWebServicesCredentialsBinding',
-                credentialsId: 'aws_infra_credential',
-                accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']] {
+            withCredentials([[
+              $class: 'AmazonWebServicesCredentialsBinding',
+              credentialsId: 'aws_infra_credential',
+              accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+              secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
               dir('ansible-role-molecule-test-agent') {
                 sh '''
 . /opt/virtualenv/molecule/bin/activate
