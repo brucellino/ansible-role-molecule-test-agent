@@ -106,6 +106,10 @@ pip_packages:
     version: ""
   - name: molecule[ec2]
     version: ""
+  - name: docker
+    version: 3.7.0
+  - name: docker-pycreds
+    version: 0.4.0
 rvm_gpg_keys:
   - mpapis.asc
   - pkuczynski.asc
