@@ -110,9 +110,18 @@ molecule verify -s ec2
               message: "Testing Docker scenario  (<${env.BUILD_URL}|Open>)",
               tokenCredentialId: 'slack_bot_token')
             dir('ansible-role-molecule-test-agent') {
+              sh 'tree .'
               sh 'which pip'
               sh 'which pip3'
               sh 'which virtualenv'
+              echo 'INFO: Creating Virtualenv'
+              sh 'virtualenv -p python3 ${HOME}/ansible'
+              echo 'INFO: Installing Ansible'
+              sh '''
+. ${HOME}/ansible/bin/activate
+pip install ansible
+                 '''
+
               } // dir
             } // steps
             post {
