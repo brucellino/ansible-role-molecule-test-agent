@@ -48,6 +48,7 @@ required_packages:
   - dns-root-data
   - dnsmasq-base
   - dnsutils
+  - default-jre-headless
   - docker-ce
   - docker-ce-cli
   - dosfstools
