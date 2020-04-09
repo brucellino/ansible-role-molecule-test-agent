@@ -77,7 +77,7 @@ molecule destroy -s ec2
             dir('ansible-role-molecule-test-agent') {
               sh '''
 . /opt/virtualenv/molecule/bin/activate
-which pipeline
+which pip
 which pip3
 molecule --version
 ansible --version
