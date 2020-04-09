@@ -82,7 +82,7 @@ which pip3
 molecule --version
 ansible --version
 molecule lint
-sudo pip install molecule[docker]
+sudo pip3 install molecule[docker]
 molecule converge
 molecule verify
               '''
