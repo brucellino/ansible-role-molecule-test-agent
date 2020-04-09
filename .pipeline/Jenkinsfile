@@ -44,7 +44,10 @@ molecule verify -s ec2
           post {
             always {
               dir('ansible-role-molecule-test-agent') {
-                sh "molecule destroy -s ec2"
+                sh '''
+. /opt/virtualenv/molecule/bin/activate
+molecule destroy -s ec2
+                   '''
                 junit 'molecule/ec2/*.xml'
               } // dir
             } // always post
@@ -73,6 +76,7 @@ molecule verify -s ec2
               sh '''
   . /opt/virtualenv/molecule/bin/activate
   molecule lint
+  pip install molecule[docker]
   molecule converge
   molecule verify
               '''
@@ -107,7 +111,7 @@ molecule verify -s ec2
           steps {
             slackSend(
               channel: slackResponse.threadId,
-              message: "Testing Docker scenario  (<${env.BUILD_URL}|Open>)",
+              message: "Testing Bootstrap scenario  (<${env.BUILD_URL}|Open>)",
               tokenCredentialId: 'slack_bot_token')
             dir('ansible-role-molecule-test-agent') {
               sh 'which pip'
