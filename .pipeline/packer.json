@@ -24,10 +24,10 @@
     {
       "type": "amazon-ebs",
       "ssh_username": "ubuntu",
-      "profile": "default",
+      "profile": "uefa-infra",
       "region": "eu-central-1",
-      "ami_name": "molecule-{{ timestamp }}",
-      "instance_type": "t2.medium",
+      "ami_name": "image-test-harness-{{ timestamp }}",
+      "instance_type": "t2.small",
       "source_ami_filter": {
         "filters": {
           "virtualization-type": "hvm",
@@ -80,7 +80,7 @@
   "post-processors": [
     {
       "type": "docker-tag",
-      "repository": "quay.io/uefadevops/molecule-build-agent",
+      "repository": "quay.io/uefadevops/image-test-harness-agent",
       "tag": "latest",
       "only": ["docker"]
     },
