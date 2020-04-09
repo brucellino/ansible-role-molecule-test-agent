@@ -68,11 +68,11 @@ molecule destroy -s ec2
           } // post
         } // stage
         stage('Docker') {
-          agent { label 'image-test-harness' }
+          agent { label 'image-test-harness-ec2' }
           steps {
             slackSend(
               channel: slackResponse.threadId,
-              message: "Testing Docker scenario  (<${env.BUILD_URL}|Open>)",
+              message: "Testing Docker scenario  (<${env.BUILD_URL}|Open>) on image-test-harness (EC2)",
               tokenCredentialId: 'slack_bot_token')
             dir('ansible-role-molecule-test-agent') {
               sh '''
@@ -115,8 +115,9 @@ molecule destroy -s ec2
           steps {
             slackSend(
               channel: slackResponse.threadId,
-              message: "Testing Bootstrap scenario  (<${env.BUILD_URL}|Open>)",
+              message: "Testing Bootstrap scenario  on vanilla bionic agent (<${env.BUILD_URL}|Open>)",
               tokenCredentialId: 'slack_bot_token')
+              sh 'sudo echo hi'
               sh 'which pip'
               sh 'which pip3'
               sh 'which virtualenv'
