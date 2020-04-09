@@ -47,7 +47,6 @@ required_packages:
   - distro-info-data
   - dmsetup
   - dnsutils
-  - docker-ce-cli
   - dpkg
   - dpkg-dev
   - e2fsprogs
@@ -62,7 +61,6 @@ required_packages:
   - gcc-7
   - gcc-7-base
   - gcc-8-base
-  - gdisk
   - gettext
   - gettext-base
   - gir1.2-glib-2.0
@@ -71,7 +69,6 @@ required_packages:
   - gnupg-l10n
   - gnupg-utils
   - gnupg2
-  - golang-docker-credential-helpers
   - gpg
   - gpg-agent
   - gpg-wks-client
@@ -101,7 +98,6 @@ required_packages:
   - mawk
   - mime-support
   - mount
-  - mtr-tiny
   - multiarch-support
   - ncurses-base
   - ncurses-bin
@@ -109,7 +105,6 @@ required_packages:
   - netbase
   - networkd-dispatcher
   - openssh-client
-  - openssh-server
   - openssl
   - passwd
   - patch
@@ -120,7 +115,6 @@ required_packages:
   - procps
   - psmisc
   - publicsuffix
-  - qrencode
   - readline-common
   - rsync
   - sed
@@ -139,6 +133,5 @@ required_packages:
   - util-linux
   - virtualenv
   - wget
-  - x11-utils
   - xz-utils
   - zlib1g

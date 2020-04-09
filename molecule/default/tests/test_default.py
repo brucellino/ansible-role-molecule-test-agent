@@ -43,7 +43,8 @@ def test_python(good_python, bad_python, host):
         "boto3",
         "botocore",
         "molecule",
-        "molecule[ec2]"])
+        "ansible",
+        "docker"])
 def test_pips(host, pip):
     """
     Check that the required pip packages are present

@@ -40,6 +40,7 @@ prerequisites:
     - python3-pip
     - python-dev
     - python-virtualenv
+    - software-properties-common
     - tcpdump
     - time
     - tmux
