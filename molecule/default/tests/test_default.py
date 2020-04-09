@@ -38,8 +38,13 @@ def test_python(good_python, bad_python, host):
 
 
 @pytest.mark.parametrize(
-    "pip",
-    ["boto", "boto3", "botocore", "molecule", "molecule[ec2]", "molecule[docker]"],
+    "pip", [
+        "boto",
+        "boto3",
+        "botocore",
+        "molecule",
+        "molecule[ec2]",
+        "molecule[docker]"],
 )
 def test_pips(host, pip):
     """
@@ -66,7 +71,9 @@ def test_inspect_profile(host):
     We should be able to execute a dummy inspec profile against this host
     """
 
-    cmd = "inspec supermarket info " + dev_sec_profile + " --chef-license=accept-silent"
+    cmd = "inspec supermarket info " \
+        + dev_sec_profile \
+        + " --chef-license=accept-silent"
     inspec_command = host.run(cmd)
     assert inspec_command.rc == 0
 
