@@ -95,7 +95,11 @@ pip_packages:
     version: 2.49.0
   - name: botocore
     version: 1.12.117
-# RVM maintainer keys that should be present
+  # RVM maintainer keys that should be present
+  - name: molecule[docker]
+    version: ""
+  - name: molecule[ec2]
+    version: ""
 rvm_gpg_keys:
   - mpapis.asc
   - pkuczynski.asc
