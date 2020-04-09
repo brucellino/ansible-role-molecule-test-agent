@@ -39,6 +39,7 @@ prerequisites:
     - tzdata
     - aufs-tools
     - busybox-static
+    - default-jre-headless
   redhat:
     - python3-pip
     - python3-devel
