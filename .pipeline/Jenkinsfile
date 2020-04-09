@@ -76,13 +76,15 @@ molecule destroy -s ec2
               tokenCredentialId: 'slack_bot_token')
             dir('ansible-role-molecule-test-agent') {
               sh '''
-  . /opt/virtualenv/molecule/bin/activate
-  molecule --version
-  ansible --version
-  molecule lint
-  sudo pip install molecule[docker]
-  molecule converge
-  molecule verify
+. /opt/virtualenv/molecule/bin/activate
+which pipeline
+which pip3
+molecule --version
+ansible --version
+molecule lint
+sudo pip install molecule[docker]
+molecule converge
+molecule verify
               '''
               } // dir
             } // steps
