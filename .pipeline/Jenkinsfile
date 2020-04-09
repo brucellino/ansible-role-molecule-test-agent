@@ -20,6 +20,7 @@ pipeline {
       parallel {
         stage('EC2') {
           agent { label 'molecule-ecs' }
+          options { retry 2 }
           steps {
             slackSend channel: slackResponse.threadId,
                       message: "Testing EC2 scenario  (<${env.BUILD_URL}|Open>)",
@@ -69,6 +70,7 @@ molecule destroy -s ec2
         } // stage
         stage('Docker') {
           agent { label 'image-test-harness-ec2' }
+          options { retry 2 }
           steps {
             slackSend(
               channel: slackResponse.threadId,
@@ -114,6 +116,7 @@ molecule verify
         } // stage
         stage('Bootstrap') {
           agent { label 'ec2-bionic' }
+          options { retry 2 }
           steps {
             slackSend(
               channel: slackResponse.threadId,
