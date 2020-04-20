@@ -39,3 +39,7 @@
   loop: "{{ docker_good[ ansible_os_family | lower ] }}"
   retries: 2
   delay: 10
+
+- name: Ensure ubuntu user can run containers
+  debug:
+    msg: NOT IMPLEMENTED YET
