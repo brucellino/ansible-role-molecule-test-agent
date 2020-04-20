@@ -1,5 +1,6 @@
 ---
-- hosts: localhost
-  remote_user: root
+- name: Apply Test Agent Role to host
+  hosts: localhost
+  become: true
   roles:
     - ansible-role-molecule-test-agent

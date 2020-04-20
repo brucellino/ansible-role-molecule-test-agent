@@ -10,29 +10,34 @@
       "name": "container",
       "commit": "true",
       "privileged": "true",
-      "run_command": [ "-d", "-i", "-t", "--name", "{{user `ansible_host`}}", "{{.Image}}", "/bin/bash" ],
+      "run_command": [
+        "-d",
+        "-i",
+        "-t",
+        "--name",
+        "{{user `ansible_host`}}",
+        "{{.Image}}",
+        "/bin/bash"
+      ],
       "name": "docker"
     },
     {
       "type": "amazon-ebs",
       "ssh_username": "ubuntu",
-      "profile": "default",
+      "profile": "uefa-infra",
       "region": "eu-central-1",
-      "ami_name": "molecule-{{ timestamp }}",
-      "instance_type": "t2.medium",
+      "ami_name": "image-test-harness-{{ timestamp }}",
+      "instance_type": "t2.small",
       "source_ami_filter": {
         "filters": {
           "virtualization-type": "hvm",
-          "name": "ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*",
+          "name": "ubuntu/images/*ubuntu-bionic-18.04-amd64-server-*",
           "root-device-type": "ebs"
         },
         "owners": ["099720109477"],
         "most_recent": true
       },
-      "run_tags": [
-        {"Name": "packer-builder"},
-        {"Workload": "Molecule"}
-      ],
+      "run_tags": [{ "Name": "packer-builder" }, { "Workload": "Molecule" }],
       "name": "ec2"
     }
   ],
@@ -75,7 +80,7 @@
   "post-processors": [
     {
       "type": "docker-tag",
-      "repository": "quay.io/uefadevops/molecule-build-agent",
+      "repository": "quay.io/uefadevops/image-test-harness-agent",
       "tag": "latest",
       "only": ["docker"]
     },

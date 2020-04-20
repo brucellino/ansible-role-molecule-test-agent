@@ -48,6 +48,7 @@ required_packages:
   - dns-root-data
   - dnsmasq-base
   - dnsutils
+  - default-jre-headless
   - docker-ce
   - docker-ce-cli
   - dosfstools
@@ -111,7 +112,6 @@ required_packages:
   - lsb-core
   - lsb-invalid-mta
   - lsb-release
-  - lsb-security
   - lsof
   - ltrace
   - lxcfs
@@ -149,7 +149,6 @@ required_packages:
   - os-prober
   - overlayroot
   - parted
-  - pass
   - passwd
   - pastebinit
   - patch
@@ -164,7 +163,6 @@ required_packages:
   - procps
   - psmisc
   - publicsuffix
-  - qrencode
   - readline-common
   - rsync
   - rsyslog
@@ -190,7 +188,6 @@ required_packages:
   - virtualenv
   - wget
   - whiptail
-  - x11-common
   - xauth
   - xz-utils
   - zlib1g

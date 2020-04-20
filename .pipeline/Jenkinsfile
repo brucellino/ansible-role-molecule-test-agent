@@ -1,8 +1,8 @@
 def slackResponse = slackSend(
-  channel: "#devops-ansible-roles",
-  message: "Ansible role molecule test agent build started",
-  tokenCredentialId: 'slack_bot_token',
-  teamDomain: 'bots-bots-bots')
+    channel: "#devops-ansible-roles",
+    message: "Ansible role molecule test agent build ${BUILD_NUMBER} started ",
+    tokenCredentialId: 'slack_bot_token')
+
 pipeline {
   options {
     checkoutToSubdirectory 'ansible-role-molecule-test-agent'
@@ -20,106 +20,144 @@ pipeline {
       parallel {
         stage('EC2') {
           agent { label 'molecule-ecs' }
+          options { retry 2 }
           steps {
-            slackSend(
-              channel: slackResponse.threadId,
-              message: "Testing EC2",
-              tokenCredentialId: 'slack_bot_token',
-              teamDomain: 'bots-bots-bots')
-            sh 'ls -la'
-            sh 'pwd'
-            echo 'Lint stage'
+            slackSend channel: slackResponse.threadId,
+                      message: "Testing EC2 scenario  (<${env.BUILD_URL}|Open>)",
+                      tokenCredentialId: 'slack_bot_token'
+            echo 'Test EC2 scenario'
             withCredentials([[
               $class: 'AmazonWebServicesCredentialsBinding',
+              credentialsId: 'aws_infra_credential',
               accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-              credentialsId: 'aws_sandbox_credentials_jenkins',
               secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-            dir('ansible-role-molecule-test-agent') {
-              sh '''
+              dir('ansible-role-molecule-test-agent') {
+                sh '''
 . /opt/virtualenv/molecule/bin/activate
-python --version
-which python3
-which python2
+molecule --version
+ansible --version
 molecule lint -s ec2
-molecule --debug converge -s ec2
+molecule create -s ec2
+molecule converge -s ec2
 molecule verify -s ec2
-              '''
-            }// dir
-            dir('ansible-role-molecule-test-agent/.pipeline') {
-              sh '''
-. /opt/virtualenv/molecule/bin/activate
-packer validate .pipeline/packer.json
                   '''
-            }
-          } // credentials
-        } // steps
-        post {
-          always {
-            dir('ansible-role-molecule-test-agent') {
-              junit 'molecule/ec2/*.xml'
-              sh '''
-molecule destroy -s ec2
-                '''
-            } // dir
-          } // always post
-          success {
-            slackSend(
-              channel: slackResponse.threadId,
-              message: "EC2 scenario passed",
-              tokenCredentialId: 'slack_bot_token',
-              teamDomain: 'bots-bots-bots')
-          }
-          failure {
-            slackSend(
-              channel: slackResponse.threadId,
-              message: "EC2 scenario failed",
-              tokenCredentialId: 'slack_bot_token',
-              teamDomain: 'bots-bots-bots')
-          }
-        } // post
-      } // stage
-      stage('Docker') {
-        agent { label 'ec2-bionic' }
-        steps {
-          slackSend(
-            channel: slackResponse.threadId,
-            message: "Testing Docker scenario",
-            tokenCredentialId: 'slack_bot_token',
-            teamDomain: 'bots-bots-bots')
-          dir('ansible-role-molecule-test-agent') {
-            sh '''
-molecule lint
-sudo pip install "ansible==2.9.2" "testinfra==3.1.0" "boto3==1.9.117" "boto==2.49.0" "botocore==1.12.117" "molecule==2.22"
-molecule converge
-molecule verify
-            '''
-            } // dir
+              } // dir
+            } // credentials
           } // steps
           post {
             always {
               dir('ansible-role-molecule-test-agent') {
-                junit 'molecule/default/*.xml'
                 sh '''
-molecule destroy
-                  '''
+. /opt/virtualenv/molecule/bin/activate
+molecule destroy -s ec2
+                   '''
+                junit 'molecule/ec2/*.xml'
               } // dir
             } // always post
             success {
               slackSend(
                 channel: slackResponse.threadId,
-                message: "Docker scenario passed",
-                tokenCredentialId: 'slack_bot_token',
-                teamDomain: 'bots-bots-bots')
+                message: "EC2 scenario passed  (<${env.BUILD_URL}|Open>)",
+                tokenCredentialId: 'slack_bot_token')
             }
             failure {
               slackSend(
                 channel: slackResponse.threadId,
-                message: "Docker scenario failed",
-                tokenCredentialId: 'slack_bot_token',
-                teamDomain: 'bots-bots-bots')
+                message: "EC2 scenario failed  (<${env.BUILD_URL}|Open>)",
+                tokenCredentialId: 'slack_bot_token')
             }
           } // post
         } // stage
+        stage('Docker') {
+          agent { label 'image-test-harness-ec2' }
+          options { retry 2 }
+          steps {
+            slackSend(
+              channel: slackResponse.threadId,
+              message: "Testing Docker scenario  (<${env.BUILD_URL}|Open>) on image-test-harness (EC2)",
+              tokenCredentialId: 'slack_bot_token')
+            dir('ansible-role-molecule-test-agent') {
+              sh '''
+. /opt/virtualenv/molecule/bin/activate
+which pip
+which pip3
+molecule --version
+ansible --version
+molecule lint
+sudo pip3 install molecule[docker]
+molecule converge
+molecule verify
+              '''
+              } // dir
+            } // steps
+            post {
+              always {
+                dir('ansible-role-molecule-test-agent') {
+                  junit 'molecule/default/*.xml'
+                  sh '''
+  . /opt/virtualenv/molecule/bin/activate
+  molecule destroy
+                    '''
+                } // dir
+              } // always post
+              success {
+                slackSend(
+                  channel: slackResponse.threadId,
+                  message: "Docker scenario passed  (<${env.BUILD_URL}|Open>)",
+                  tokenCredentialId: 'slack_bot_token')
+              }
+              failure {
+                slackSend(
+                  channel: slackResponse.threadId,
+                  message: "Docker scenario failed  (<${env.BUILD_URL}|Open>)",
+                  tokenCredentialId: 'slack_bot_token')
+              }
+            } // post
+        } // stage
+        stage('Bootstrap') {
+          agent { label 'ec2-bionic' }
+          options { retry 2 }
+          steps {
+            slackSend(
+              channel: slackResponse.threadId,
+              message: "Testing Bootstrap scenario  on vanilla bionic agent (<${env.BUILD_URL}|Open>)",
+              tokenCredentialId: 'slack_bot_token')
+              sh 'sudo echo hi'
+              sh 'which pip'
+              sh 'which pip3'
+              sh 'which virtualenv'
+              echo 'INFO: Creating Virtualenv'
+              sh 'virtualenv -p python3 ${HOME}/ansible'
+              echo 'INFO: Installing Ansible'
+              sh '''
+. ${HOME}/ansible/bin/activate
+pip install ansible
+                 '''
+              echo 'INFO: Applying configuration to self'
+              sh '''
+ansible-playbook -c local \
+                 -i ansible-role-molecule-test-agent/tests/inventory \
+                 ansible-role-molecule-test-agent/tests/test.yml
+                 '''
+            } // steps
+            post {
+              always {
+                echo 'INFO: Always executed post actions'
+              } // always post
+              success {
+                slackSend(
+                  channel: slackResponse.threadId,
+                  message: "Bootstrap scenario passed  (<${env.BUILD_URL}|Open>)",
+                  tokenCredentialId: 'slack_bot_token')
+              }
+              failure {
+                slackSend(
+                  channel: slackResponse.threadId,
+                  message: "Bootstrap scenario failed  (<${env.BUILD_URL}|Open>)",
+                  tokenCredentialId: 'slack_bot_token')
+              }
+            } // post
+          } // stage
       } // parallel test stage
     } // Test stage
     stage('Bake') {
@@ -129,11 +167,9 @@ molecule destroy
       }
       agent { label 'ec2-bionic' }
       steps {
-        slackSend(
-            channel: slackResponse.threadId,
-            message: "Starting bake",
-            tokenCredentialId: 'slack_bot_token',
-            teamDomain: 'bots-bots-bots')
+        slackSend channel: slackResponse.threadId,
+                  message: "Starting bake",
+                  tokenCredentialId: 'slack_bot_token'
         dir('ansible-role-molecule-test-agent/.pipeline') {
           withCredentials([[
             $class: 'AmazonWebServicesCredentialsBinding',
@@ -145,8 +181,8 @@ molecule destroy
             usernameVariable: 'QUAY_USERNAME',
             passwordVariable: 'QUAY_PASSWORD' )]) {
             sh '''
+packer validate .pipeline/packer.json
 packer build packer.json
-sudo apt-get install -y gnupg2 pass
 docker login -u="${QUAY_USERNAME}" -p="${QUAY_PASSWORD}" quay.io
 docker push quay.io/uefadevops/molecule-build-agent
 docker logout
@@ -158,20 +194,16 @@ docker logout
   } // stages
   post {
     success {
-      slackSend(
-        channel: slackResponse.threadId,
-        message: "Molecule build agent artifacts created",
-        tokenCredentialId: 'slack_bot_token',
-        color: 'good',
-        teamDomain: 'bots-bots-bots')
+      slackSend channel: slackResponse.threadId,
+                message: "Molecule build agent artifacts created  (<${env.BUILD_URL}|Open>)",
+                tokenCredentialId: 'slack_bot_token',
+                color: 'good'
     }
     failure {
-      slackSend(
-        channel: slackResponse.threadId,
-        message: "Molecule build agent pipeline failed",
-        tokenCredentialId: 'slack_bot_token',
-        color: 'warn',
-        teamDomain: 'bots-bots-bots')
+      slackSend channel: slackResponse.threadId,
+                message: "Molecule build agent pipeline failed  (<${env.BUILD_URL}|Open>)",
+                tokenCredentialId: 'slack_bot_token',
+                color: 'danger'
     }
   } // post
 } // pipeline

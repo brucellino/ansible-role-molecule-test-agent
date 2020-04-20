@@ -1,5 +1,8 @@
 ---
 optional_packages:
+  - pass
+  - lsb-security
+  - qrencode
   - autotools-dev
   - base-passwd
   - command-not-found
@@ -139,3 +142,4 @@ optional_packages:
   - jq
   - javascript-common
   - x11-utils
+  - x11-common
