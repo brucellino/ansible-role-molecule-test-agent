@@ -14,6 +14,16 @@
     state: present
     name: "{{ item }}"
   loop: "{{ prerequisites[ansible_os_family | lower ] }}"
+  register: prereq_pkgs
+  until: prereq_pkgs.failed == False
+  retries: 2
+
+- name: Ensure Jenkins user
+  user:
+    name: jenkins
+    state: present
+    create_home: true
+    shell: /bin/bash
 
 - include_tasks: docker.yml
   when: ansible_virtualization_type != 'docker'
