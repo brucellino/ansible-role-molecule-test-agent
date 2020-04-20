@@ -185,8 +185,8 @@ ansible-playbook -c local \
             passwordVariable: 'QUAY_PASSWORD' )]) {
             sh '''
 packer validate packer.json
-packer build packer.json
 docker login -u="${QUAY_USERNAME}" -p="${QUAY_PASSWORD}" quay.io
+packer build packer.json
 docker push quay.io/uefadevops/molecule-build-agent
 docker logout
 echo 'Updating Container Registry Description'
