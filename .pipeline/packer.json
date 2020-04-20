@@ -82,12 +82,9 @@
         "only": ["docker"]
       },
       {
-        "type": "docker-tag",
-        "repository": "quay.io/uefadevops/image-test-harness-agent",
-        "tag": "{{ user `docker_image_tag`}}",
+        "type": "docker-push",
         "only": ["docker"]
-      },
-      "docker-push"
+      }
     ]
   ]
 }
