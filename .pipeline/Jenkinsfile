@@ -161,12 +161,14 @@ ansible-playbook -c local \
       } // parallel test stage
     } // Test stage
     stage('Bake') {
-      environment name: 'GITHUB_TAG', value: 'master'
       when {
         branch 'master'
         beforeAgent true
       }
       agent { label 'ec2-bionic' }
+      environment {
+        GITHUB_TAG = 'master'
+      }
       steps {
         slackSend channel: slackResponse.threadId,
                   message: "Starting bake",
