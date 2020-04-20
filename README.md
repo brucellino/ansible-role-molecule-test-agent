@@ -81,7 +81,7 @@ Apache
 
 ## Author Information
 
-Bruce Becker
+Bruce Becker, UEFA DevOps
 
 ### Housekeeping
 

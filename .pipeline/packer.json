@@ -1,7 +1,8 @@
 {
   "variables": {
     "ansible_host": "default",
-    "ansible_connection": "docker"
+    "ansible_connection": "docker",
+    "docker_image_tag": "{{ env `GITHUB_TAG` }}"
   },
   "builders": [
     {
@@ -31,7 +32,7 @@
       "source_ami_filter": {
         "filters": {
           "virtualization-type": "hvm",
-          "name": "ubuntu/images/*ubuntu-bionic-18.04-amd64-server-*",
+          "name": "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*",
           "root-device-type": "ebs"
         },
         "owners": ["099720109477"],
@@ -57,15 +58,6 @@
       "only": ["docker"]
     },
     {
-      "type": "shell",
-      "inline": [
-        "sudo apt-get update -qq",
-        "sudo apt-get upgrade -y",
-        "sudo DEBIAN_FRONTEND=noninteractive apt-get install -y python3"
-      ],
-      "only": ["ec2"]
-    },
-    {
       "type": "ansible",
       "playbook_file": "playbook-ec2.yml",
       "user": "ubuntu",
@@ -79,14 +71,23 @@
   ],
   "post-processors": [
     {
-      "type": "docker-tag",
-      "repository": "quay.io/uefadevops/image-test-harness-agent",
-      "tag": "latest",
-      "only": ["docker"]
-    },
-    {
       "type": "manifest",
       "output": "manifest.json"
-    }
+    },
+    [
+      {
+        "type": "docker-tag",
+        "repository": "quay.io/uefadevops/image-test-harness-agent",
+        "tag": "latest",
+        "only": ["docker"]
+      },
+      {
+        "type": "docker-tag",
+        "repository": "quay.io/uefadevops/image-test-harness-agent",
+        "tag": "{{ user `docker_image_tag`}}",
+        "only": ["docker"]
+      },
+      "docker-push"
+    ]
   ]
 }

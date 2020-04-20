@@ -161,6 +161,7 @@ ansible-playbook -c local \
       } // parallel test stage
     } // Test stage
     stage('Bake') {
+      environment name: 'GITHUB_TAG', value: 'master'
       when {
         branch 'master'
         beforeAgent true
@@ -181,11 +182,12 @@ ansible-playbook -c local \
             usernameVariable: 'QUAY_USERNAME',
             passwordVariable: 'QUAY_PASSWORD' )]) {
             sh '''
-packer validate .pipeline/packer.json
+packer validate packer.json
 packer build packer.json
 docker login -u="${QUAY_USERNAME}" -p="${QUAY_PASSWORD}" quay.io
 docker push quay.io/uefadevops/molecule-build-agent
 docker logout
+echo 'Updating Container Registry Description'
               '''
           } // credentials
         } // dir
