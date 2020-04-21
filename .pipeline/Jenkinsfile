@@ -219,7 +219,7 @@ ansible-playbook -c local \
         branch 'master'
         beforeAgent true
       }
-      agent { label 'ec2-bionic' }
+      agent { label 'image-test-harness-ec2' }
       environment {
         GITHUB_TAG = 'master'
       }
