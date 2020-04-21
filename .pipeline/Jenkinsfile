@@ -188,7 +188,7 @@ ansible-playbook --version
               sh '''
 . ${HOME}/ansible/bin/activate
 whoami
-sudo echi hi
+sudo echo hi
 ansible-playbook -c local \
                  -i ansible-role-molecule-test-agent/tests/inventory \
                  ansible-role-molecule-test-agent/tests/test.yml
