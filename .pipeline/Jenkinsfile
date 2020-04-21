@@ -36,6 +36,7 @@ pipeline {
 . /opt/virtualenv/molecule/bin/activate
 molecule --version
 ansible --version
+molecule destroy -s ec2
 molecule lint -s ec2
 molecule create -s ec2
 molecule converge -s ec2

@@ -5,7 +5,7 @@
   tasks:
     - name: Ensure python3
       raw:
-        sudo apt-get update -qq && asudo pt-get install -y python3 python3-apt
+        sudo apt-get update -qq && sudo apt-get install -y python3 python3-apt
 
 - name: Ensure jenkins users
   hosts: all
