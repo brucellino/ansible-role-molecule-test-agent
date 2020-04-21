@@ -6,12 +6,26 @@ driver:
 lint:
   name: yamllint
 platforms:
-  - name: instance
-    image: centos:7
+  - name: bionic
+    image: ubuntu:bionic
+  - name: jenkins-agent
+    image: jenkins/inbound-agent
+    pull: true
+    command: bash
+    tty: True
 provisioner:
   name: ansible
   lint:
     name: ansible-lint
+  config_options:
+    defaults:
+      callback_whitelist:
+        - yaml
+        - profile_tasks
+      bin_ansible_callbacks:
+        - yaml
+      stdout_callback: yaml
+      interpreter_python: python3
 verifier:
   name: inspec
   lint:
