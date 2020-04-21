@@ -31,3 +31,13 @@ def test_inspect_profile(host):
         + " --chef-license=accept-silent"
     inspec_command = host.run(cmd)
     assert inspec_command.rc == 0
+
+
+def test_inspec_verifier_gems(host):
+    """
+    The gems necessary to verify a scenario with inspec should be present
+    """
+    assert host.exists('rubocop')
+
+    rubocop_version = host.run('rubocop --version')
+    assert '0.82.0' in rubocop_version.stdout
