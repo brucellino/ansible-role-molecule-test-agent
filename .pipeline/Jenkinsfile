@@ -124,6 +124,8 @@ molecule verify
               tokenCredentialId: 'slack_bot_token')
             dir('ansible-role-molecule-test-agent') {
               sh '''
+which gem
+which rubocop
 . /opt/virtualenv/molecule/bin/activate
 which pip
 which pip3
