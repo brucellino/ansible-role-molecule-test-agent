@@ -142,7 +142,6 @@ molecule verify -s inspec
             post {
               always {
                 dir('ansible-role-molecule-test-agent') {
-                  junit 'molecule/default/*.xml'
                   sh '''
   . /opt/virtualenv/molecule/bin/activate
   molecule destroy -s inspec
