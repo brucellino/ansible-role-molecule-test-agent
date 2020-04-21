@@ -2,7 +2,9 @@
   "variables": {
     "ansible_host": "default",
     "ansible_connection": "docker",
-    "docker_image_tag": "{{ env `GITHUB_TAG` }}"
+    "docker_image_tag": "{{ env `GITHUB_TAG` }}",
+    "quay_username": "{{ env `QUAY_USERNAME` }}",
+    "quay_password": "{{ env `QUAY_PASSWORD` }}"
   },
   "builders": [
     {
@@ -83,6 +85,10 @@
       },
       {
         "type": "docker-push",
+        "login": true,
+        "login_username": "{{ user `quay_username` }}",
+        "login_password": "{{ user `quay_password` }}",
+        "login_server": "quay.io",
         "only": ["docker"]
       }
     ]

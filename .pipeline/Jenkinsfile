@@ -179,10 +179,16 @@ molecule verify -s inspec
               echo 'INFO: Installing Ansible'
               sh '''
 . ${HOME}/ansible/bin/activate
-pip install ansible
+pip install ansible==2.9.2
+which ansible
+which ansible-playbook
+ansible-playbook --version
                  '''
               echo 'INFO: Applying configuration to self'
               sh '''
+. ${HOME}/ansible/bin/activate
+whoami
+sudo echi hi
 ansible-playbook -c local \
                  -i ansible-role-molecule-test-agent/tests/inventory \
                  ansible-role-molecule-test-agent/tests/test.yml
@@ -233,11 +239,7 @@ ansible-playbook -c local \
             passwordVariable: 'QUAY_PASSWORD' )]) {
             sh '''
 packer validate packer.json
-docker login -u="${QUAY_USERNAME}" -p="${QUAY_PASSWORD}" quay.io
 packer build packer.json
-docker push quay.io/uefadevops/molecule-build-agent
-docker logout
-echo 'Updating Container Registry Description'
               '''
           } // credentials
         } // dir
