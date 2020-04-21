@@ -223,6 +223,7 @@ ansible-playbook -c local \
       environment {
         GITHUB_TAG = 'master'
       }
+      options { retry 2 }
       steps {
         slackSend channel: slackResponse.threadId,
                   message: "Starting bake",
