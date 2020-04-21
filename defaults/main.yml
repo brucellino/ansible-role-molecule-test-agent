@@ -49,6 +49,7 @@ prerequisites:
     - wget
     - ruby
     - ruby-dev
+    - rubocop
     - rubygems
   redhat:
     - python3-pip
