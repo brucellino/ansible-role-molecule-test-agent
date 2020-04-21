@@ -47,6 +47,9 @@ prerequisites:
     - tree
     - tzdata
     - wget
+    - ruby
+    - ruby-dev
+    - rubygems
   redhat:
     - python3-pip
     - python3-devel

@@ -34,8 +34,15 @@
     line: rvm use ruby-2.6.0
     insertafter: EOF
 
-- name: Ensure gems
+- name: Ensure gems in rvm
   raw:
     bash --login -c ". /etc/profile && gem install {{ item.name }} --version {{
     item.version }}"
+  loop: "{{ gems }}"
+
+- name: Ensure gems
+  gem:
+    name: "{{ item.name }}"
+    state: present
+    user_install: false
   loop: "{{ gems }}"

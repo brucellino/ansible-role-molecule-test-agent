@@ -87,7 +87,7 @@
         - "{{ lookup('env', 'MOLECULE_VERIFIER_TEST_DIRECTORY') }}/test_*.rb"
 
     - name: Execute Inspec tests
-      shell: bash --login -c "{{ inspec_bin }} exec {{ item.dest }}"
+      command: "{{ inspec_bin }} exec {{ item.dest }}"
       register: test_results
       with_items: "{{ copy_inspec_tests.results }}"
       changed_when: test_results.changed

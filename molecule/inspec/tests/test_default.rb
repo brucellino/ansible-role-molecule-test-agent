@@ -9,7 +9,14 @@ describe file('/etc/hosts') do
 end
 
 # https://inspec.io/docs/reference/resources/gem/
-describe gem('rubocop', '/usr/local/rvm/rubies/ruby-2.6.0/bin/gem') do
+describe gem('rubocop') do
   it { should be_installed }
   its('version') { should cmp >= '0.82.0' }
+end
+
+# https://inspec.io/docs/reference/resources/command/
+describe command('rubocop --version') do
+  its('stdout') { should match('0.82.0') }
+  its('stderr') { should_not match(/.*/) }
+  its('exit_status') { should eq 0 }
 end
