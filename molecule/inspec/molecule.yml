@@ -6,7 +6,7 @@ driver:
 lint:
   name: yamllint
 platforms:
-  - name: bionic
+  - name: inspec
     image: ubuntu:bionic
 provisioner:
   name: ansible
