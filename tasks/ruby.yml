@@ -13,7 +13,7 @@
   get_url:
     url: https://get.rvm.io
     dest: /root/install_rvm.sh
-    mode: '0777'
+    mode: "0777"
 
 - name: Ensure rvm
   shell: /root/install_rvm.sh stable
@@ -27,3 +27,22 @@
 
 - name: Install ruby 2.6.0
   command: /bin/bash --login -c 'rvm install --no-docs 2.6.0'
+
+- name: Ensure ruby-2.6.0 is default
+  lineinfile:
+    path: /etc/profile
+    line: rvm use ruby-2.6.0
+    insertafter: EOF
+
+- name: Ensure gems in rvm
+  raw:
+    bash --login -c ". /etc/profile && gem install {{ item.name }} --version {{
+    item.version }}"
+  loop: "{{ gems }}"
+
+- name: Ensure gems
+  gem:
+    name: "{{ item.name }}"
+    state: present
+    user_install: false
+  loop: "{{ gems }}"

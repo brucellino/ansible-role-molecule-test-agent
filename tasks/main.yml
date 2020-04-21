@@ -6,17 +6,17 @@
       Role: {{ ansible_virtualization_role }}
       Type: {{ ansible_virtualization_type }}
 
-- include_tasks: security.yml
-  when: ansible_virtualization_type != 'docker'
-
 - name: Ensure prerequisites
   package:
     state: present
     name: "{{ item }}"
   loop: "{{ prerequisites[ansible_os_family | lower ] }}"
   register: prereq_pkgs
-  until: prereq_pkgs.failed == False
+  until: not prereq_pkgs.failed
   retries: 2
+
+- include_tasks: security.yml
+  when: ansible_virtualization_type != 'docker'
 
 - name: Ensure Jenkins user
   user:

@@ -18,7 +18,7 @@ pipeline {
         beforeAgent true
       }
       parallel {
-        stage('EC2') {
+        stage('Scenario: EC2') {
           agent { label 'molecule-ecs' }
           options { retry 2 }
           steps {
@@ -36,6 +36,7 @@ pipeline {
 . /opt/virtualenv/molecule/bin/activate
 molecule --version
 ansible --version
+molecule destroy -s ec2
 molecule lint -s ec2
 molecule create -s ec2
 molecule converge -s ec2
@@ -68,7 +69,7 @@ molecule destroy -s ec2
             }
           } // post
         } // stage
-        stage('Docker') {
+        stage('Scenario: Default') {
           agent { label 'image-test-harness-ec2' }
           options { retry 2 }
           steps {
@@ -114,6 +115,53 @@ molecule verify
               }
             } // post
         } // stage
+        stage('Scenario: Inspec') {
+          agent { label 'image-test-harness-ec2' }
+          options { retry 2 }
+          steps {
+            slackSend(
+              channel: slackResponse.threadId,
+              message: "Testing Docker scenario  (<${env.BUILD_URL}|Open>) on image-test-harness (EC2)",
+              tokenCredentialId: 'slack_bot_token')
+            dir('ansible-role-molecule-test-agent') {
+              sh '''
+which gem
+which rubocop
+. /opt/virtualenv/molecule/bin/activate
+which pip
+which pip3
+molecule --version
+ansible --version
+molecule lint -s inspec
+sudo pip3 install molecule[docker]
+molecule converge -s inspec
+molecule verify -s inspec
+              '''
+              } // dir
+            } // steps
+            post {
+              always {
+                dir('ansible-role-molecule-test-agent') {
+                  sh '''
+  . /opt/virtualenv/molecule/bin/activate
+  molecule destroy -s inspec
+                    '''
+                } // dir
+              } // always post
+              success {
+                slackSend(
+                  channel: slackResponse.threadId,
+                  message: "Inspec scenario passed  (<${env.BUILD_URL}|Open>)",
+                  tokenCredentialId: 'slack_bot_token')
+              }
+              failure {
+                slackSend(
+                  channel: slackResponse.threadId,
+                  message: "Inspec scenario failed  (<${env.BUILD_URL}|Open>)",
+                  tokenCredentialId: 'slack_bot_token')
+              }
+            } // post
+        } // stage
         stage('Bootstrap') {
           agent { label 'ec2-bionic' }
           options { retry 2 }
@@ -131,10 +179,16 @@ molecule verify
               echo 'INFO: Installing Ansible'
               sh '''
 . ${HOME}/ansible/bin/activate
-pip install ansible
+pip install ansible==2.9.2
+which ansible
+which ansible-playbook
+ansible-playbook --version
                  '''
               echo 'INFO: Applying configuration to self'
               sh '''
+. ${HOME}/ansible/bin/activate
+whoami
+sudo echo hi
 ansible-playbook -c local \
                  -i ansible-role-molecule-test-agent/tests/inventory \
                  ansible-role-molecule-test-agent/tests/test.yml
@@ -185,11 +239,7 @@ ansible-playbook -c local \
             passwordVariable: 'QUAY_PASSWORD' )]) {
             sh '''
 packer validate packer.json
-docker login -u="${QUAY_USERNAME}" -p="${QUAY_PASSWORD}" quay.io
 packer build packer.json
-docker push quay.io/uefadevops/molecule-build-agent
-docker logout
-echo 'Updating Container Registry Description'
               '''
           } // credentials
         } // dir

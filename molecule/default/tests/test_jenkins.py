@@ -8,4 +8,3 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 def test_jenkins_user(host):
     jenkins_user = host.user('jenkins')
     assert jenkins_user.name == 'jenkins'
-    assert 'docker' in jenkins_user.groups

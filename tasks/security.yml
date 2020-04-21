@@ -7,7 +7,7 @@
     name: "{{ item }}"
   loop: "{{ dev_sec_prerequisites[ansible_os_family | lower] }}"
   register: sec_pkgs
-  until: sec_pkgs.failed == False
+  until: not sec_pkgs.failed
   retries: 2
 
 - name: Secury kernel parameters
