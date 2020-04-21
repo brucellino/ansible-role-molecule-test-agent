@@ -13,7 +13,7 @@
   get_url:
     url: https://get.rvm.io
     dest: /root/install_rvm.sh
-    mode: '0777'
+    mode: "0777"
 
 - name: Ensure rvm
   shell: /root/install_rvm.sh stable
@@ -27,3 +27,9 @@
 
 - name: Install ruby 2.6.0
   command: /bin/bash --login -c 'rvm install --no-docs 2.6.0'
+
+- name: Ensure gems
+  gem:
+    name: "{{ item.name }}"
+    state: present
+    version: "{{ item.version }}"
