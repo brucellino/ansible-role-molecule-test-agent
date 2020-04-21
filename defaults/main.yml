@@ -94,7 +94,7 @@ docker_repo_string:
   "deb [arch=amd64] {{ docker_url }}/{{ ansible_distribution |lower }} {{
   ansible_distribution_release | lower }} stable"
 # Inspec version
-inspec_version: 4.16.0
+inspec_version: 4.18.104
 # pips
 pip_packages:
   - name: molecule
