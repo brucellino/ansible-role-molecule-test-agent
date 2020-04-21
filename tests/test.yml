@@ -1,4 +1,22 @@
 ---
+- hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Ensure python3
+      raw: apt-get update -qq && apt-get install -y python3 python3-apt
+
+- name: Ensure jenkins users
+  hosts: all
+  become: true
+  tasks:
+    - name: Ensure jenkins user is present
+      user:
+        name: jenkins
+        state: present
+        create_home: true
+        shell: /bin/bash
+
 - name: Apply Test Agent Role to host
   hosts: localhost
   become: true
