@@ -2,7 +2,24 @@
 
 ## [Unreleased](https://github.com/brucellino/ansible-role-molecule-test-agent/tree/HEAD)
 
-[Full Changelog](https://github.com/brucellino/ansible-role-molecule-test-agent/compare/v0.1.1...HEAD)
+[Full Changelog](https://github.com/brucellino/ansible-role-molecule-test-agent/compare/v0.2.0...HEAD)
+
+**Implemented enhancements:**
+
+- Molecule/inspec verifier
+  [\#18](https://github.com/brucellino/ansible-role-molecule-test-agent/pull/18)
+  ([brucellino](https://github.com/brucellino))
+
+**Fixed bugs:**
+
+- Inspec verifier not supported
+  [\#17](https://github.com/brucellino/ansible-role-molecule-test-agent/issues/17)
+- Use source ami filter instead of source ami
+  [\#16](https://github.com/brucellino/ansible-role-molecule-test-agent/issues/16)
+
+## [v0.2.0](https://github.com/brucellino/ansible-role-molecule-test-agent/tree/v0.2.0) (2020-04-20)
+
+[Full Changelog](https://github.com/brucellino/ansible-role-molecule-test-agent/compare/v0.1.1...v0.2.0)
 
 **Implemented enhancements:**
 
@@ -12,11 +29,6 @@
   [\#13](https://github.com/brucellino/ansible-role-molecule-test-agent/issues/13)
 - Implement Ansible tests
   [\#12](https://github.com/brucellino/ansible-role-molecule-test-agent/issues/12)
-
-**Fixed bugs:**
-
-- Use source ami filter instead of source ami
-  [\#16](https://github.com/brucellino/ansible-role-molecule-test-agent/issues/16)
 
 ## [v0.1.1](https://github.com/brucellino/ansible-role-molecule-test-agent/tree/v0.1.1) (2020-04-20)
 
