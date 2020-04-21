@@ -20,7 +20,8 @@ The role adds the following tools:
 
 ## Requirements
 
-None.
+**This role has to be bootstrapped**, since it is used to test itself. This can
+be done by running the role against the control machine.
 
 ## Role Variables
 
