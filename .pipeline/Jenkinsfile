@@ -18,7 +18,7 @@ pipeline {
         beforeAgent true
       }
       parallel {
-        stage('EC2') {
+        stage('Scenario: EC2') {
           agent { label 'molecule-ecs' }
           options { retry 2 }
           steps {
@@ -68,7 +68,7 @@ molecule destroy -s ec2
             }
           } // post
         } // stage
-        stage('Docker') {
+        stage('Scenario: Default') {
           agent { label 'image-test-harness-ec2' }
           options { retry 2 }
           steps {
@@ -110,6 +110,52 @@ molecule verify
                 slackSend(
                   channel: slackResponse.threadId,
                   message: "Docker scenario failed  (<${env.BUILD_URL}|Open>)",
+                  tokenCredentialId: 'slack_bot_token')
+              }
+            } // post
+        } // stage
+        stage('Scenario: Inspec') {
+          agent { label 'image-test-harness-ec2' }
+          options { retry 2 }
+          steps {
+            slackSend(
+              channel: slackResponse.threadId,
+              message: "Testing Docker scenario  (<${env.BUILD_URL}|Open>) on image-test-harness (EC2)",
+              tokenCredentialId: 'slack_bot_token')
+            dir('ansible-role-molecule-test-agent') {
+              sh '''
+. /opt/virtualenv/molecule/bin/activate
+which pip
+which pip3
+molecule --version
+ansible --version
+molecule lint -s inspec
+sudo pip3 install molecule[docker]
+molecule converge -s inspec
+molecule verify -s inspec
+              '''
+              } // dir
+            } // steps
+            post {
+              always {
+                dir('ansible-role-molecule-test-agent') {
+                  junit 'molecule/default/*.xml'
+                  sh '''
+  . /opt/virtualenv/molecule/bin/activate
+  molecule destroy -s inspec
+                    '''
+                } // dir
+              } // always post
+              success {
+                slackSend(
+                  channel: slackResponse.threadId,
+                  message: "Inspec scenario passed  (<${env.BUILD_URL}|Open>)",
+                  tokenCredentialId: 'slack_bot_token')
+              }
+              failure {
+                slackSend(
+                  channel: slackResponse.threadId,
+                  message: "Inspec scenario failed  (<${env.BUILD_URL}|Open>)",
                   tokenCredentialId: 'slack_bot_token')
               }
             } // post
