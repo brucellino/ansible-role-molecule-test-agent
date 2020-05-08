@@ -239,6 +239,7 @@ ansible-playbook -c local \
             usernameVariable: 'QUAY_USERNAME',
             passwordVariable: 'QUAY_PASSWORD' )]) {
             sh '''
+sudo rm -rf ~/.ansible* ~/.packer*
 . /opt/virtualenv/bake/bin/activate
 packer validate packer.json
 packer build packer.json
