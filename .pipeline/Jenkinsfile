@@ -219,7 +219,7 @@ ansible-playbook -c local \
         branch 'master'
         beforeAgent true
       }
-      agent { label 'image-test-harness-ec2' }
+      agent { label 'bake-agent-ec2' }
       environment {
         GITHUB_TAG = 'master'
       }
