@@ -17,3 +17,7 @@ ruby_packages:
   - ruby2.5-dev
   - ruby2.5-doc
   - rubygems-integration
+ruby_gems:
+  - github_changelog_generator
+  - rubocop
+  - bundler

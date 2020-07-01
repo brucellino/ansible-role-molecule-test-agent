@@ -128,6 +128,8 @@ gems:
     version: 0.82.0
   - name: bundler
     version: 2.1.4
+  - name: github_changelog_generator
+    version: 1.15.2
 
 # Dev-Sec security stuff
 sysctl_security_items:
