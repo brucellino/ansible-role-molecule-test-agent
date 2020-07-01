@@ -26,12 +26,12 @@
     mode: 0644
 
 - name: Install ruby 2.6.0
-  command: /bin/bash --login -c 'rvm install --no-docs 2.6.0'
+  command: /bin/bash --login -c 'rvm install --no-docs 2.6.5'
 
 - name: Ensure ruby-2.6.0 is default
   lineinfile:
     path: /etc/profile
-    line: rvm use ruby-2.6.0
+    line: rvm use ruby-2.6.5
     insertafter: EOF
 
 - name: Ensure gems in rvm

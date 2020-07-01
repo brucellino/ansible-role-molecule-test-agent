@@ -219,11 +219,12 @@ ansible-playbook -c local \
         beforeAgent true
       }
       agent { label 'bake-agent-ec2' }
-      environment {
-        GITHUB_TAG = 'master'
-      }
+      // environment {
+      //   GITHUB_TAG = 'master'
+      // }
       options { retry 2 }
       steps {
+        checkout scm
         slackSend channel: slackResponse.threadId,
                   message: "Starting bake",
                   tokenCredentialId: 'slack_bot_token'

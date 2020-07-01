@@ -1,8 +1,12 @@
 # Changelog
 
-## [Unreleased](https://github.com/brucellino/ansible-role-molecule-test-agent/tree/HEAD)
+## [v0.3.0](https://github.com/brucellino/ansible-role-molecule-test-agent/tree/v0.3.0) (2020-07-01)
 
-[Full Changelog](https://github.com/brucellino/ansible-role-molecule-test-agent/compare/v0.2.0...HEAD)
+[Full Changelog](https://github.com/brucellino/ansible-role-molecule-test-agent/compare/v0.2.1...v0.3.0)
+
+## [v0.2.1](https://github.com/brucellino/ansible-role-molecule-test-agent/tree/v0.2.1) (2020-04-21)
+
+[Full Changelog](https://github.com/brucellino/ansible-role-molecule-test-agent/compare/v0.2.0...v0.2.1)
 
 **Implemented enhancements:**
 
