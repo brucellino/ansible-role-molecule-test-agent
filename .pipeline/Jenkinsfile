@@ -1,22 +1,21 @@
+def role_name = 'ansible-role-molecule-test-agent'
+def bake_dir = role_name + '/.pipeline'
+
 def slackResponse = slackSend(
     channel: "#devops-ansible-roles",
     message: "Ansible role molecule test agent build ${BUILD_NUMBER} started ",
     tokenCredentialId: 'slack_bot_token')
 
 pipeline {
-  options {
-    checkoutToSubdirectory 'ansible-role-molecule-test-agent'
-  }
   agent none
+  options { checkoutToSubdirectory(role_name) }
   environment {
     AWS_REGION='eu-central-1'
+    QUAY=credentials('uefadevops+quaybot')
+    GITHUB_TOKEN=credentials('svc_github_token')
   }
   stages {
     stage('Test') {
-      when {
-        changeRequest()
-        beforeAgent true
-      }
       parallel {
         stage('Scenario: EC2') {
           agent { label 'molecule-ecs' }
@@ -31,7 +30,7 @@ pipeline {
               credentialsId: 'aws_infra_credential',
               accessKeyVariable: 'AWS_ACCESS_KEY_ID',
               secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-              dir('ansible-role-molecule-test-agent') {
+              dir(role_name) {
                 sh '''
 . /opt/virtualenv/molecule/bin/activate
 molecule --version
@@ -47,7 +46,7 @@ molecule verify -s ec2
           } // steps
           post {
             always {
-              dir('ansible-role-molecule-test-agent') {
+              dir(role_name) {
                 sh '''
 . /opt/virtualenv/molecule/bin/activate
 molecule destroy -s ec2
