@@ -1,4 +1,6 @@
-# Molecule Test Agent
+# Ansible Role Test Agent
+
+_**Note:** this role previously referred to the use of [Molecule](https://molecule.readthedocs.io) to provision and converge environments. Due to divergence in features in Molecule, we no longer use it for this function, relying instead on a [Terraform module](https://github.com/UEFADigital/tfmod-ansible-test-harness)_
 
 This role provisions an environment in which to test Ansible roles. In order to
 test Ansible roles, you probably want to do a few things:
@@ -13,7 +15,6 @@ in a containerised environment.
 The role adds the following tools:
 
 - Python, pip, virtual environment (only Python3)
-- [Molecule](https://molecule.readthedocs.io/en/latest/)
 - [Ansible](https://docs.ansible.com/ansible) (as a dependency of Molecule)
 - Ruby (required for executing [Inspec](https://inspec.io) tests)
 - [Inspec](https://inspec.io) executable
@@ -32,11 +33,10 @@ scenarios using the `inspec` verifier, we need `rubocop` on the control node.
 | `dev_sec_prerequisites` | Prerequisites for the Dev-Sec Inspec profile         |
 | `prerequisites`         | OS-dependent list of packages needed as prerequisite |
 | `inspec_version`        | Version of Chef Inspec to install                    |
-| `molecule_version`      | Version of Molecule to install                       |
 
 ## Dependencies
 
-None.
+You will need a means to create the initial state. We typically use a [Terraform module](https://github.com/UEFADigital/tfmod-ansible-test-harness)
 
 ## Example Playbook
 
@@ -44,8 +44,8 @@ Add this role to your requirements as such
 
 ```yaml
 # requrements.yml
-- name: brucellino.test_agent
-  src: https://github.com/brucellino/ansible-role-molecule-test-agent
+- name: uefa_devops.test_agent
+  src: https://github.com/UEFADigital/ansible-role-test-agent
   version: master
 ```
 
@@ -54,7 +54,7 @@ Then write your playbook to use it.
 ```yaml
 - hosts: servers
   roles:
-    - { role: brucellino.test_agent }
+    - { role: uefa_devops.test_agent }
 ```
 
 ## Test coverage and scenarios

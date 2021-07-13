@@ -56,3 +56,6 @@ junit.xml
 
 # Ignore packer manifests
 .pipeline/manifest.json
+
+# Ignore terraform dirs
+.terraform

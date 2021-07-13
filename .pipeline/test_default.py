@@ -1,11 +1,7 @@
-import os
 from distutils.version import LooseVersion
-import testinfra.utils.ansible_runner
 import pytest
 
-testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
-    os.environ["MOLECULE_INVENTORY_FILE"]
-).get_hosts("all")
+dev_sec_profile = "dev-sec/linux-baseline"
 ansible_test_command = (
     ". /opt/virtualenv/molecule/bin/activate " + " ; ansible --version"
 )
@@ -36,12 +32,34 @@ def test_python(good_python, bad_python, host):
     assert LooseVersion(python.version) >= LooseVersion("3.6")
 
 
-@pytest.mark.parametrize("pip", ["boto", "boto3", "botocore"])
+@pytest.mark.parametrize("pip", [
+    "boto",
+    "boto3",
+    "botocore",
+    "molecule",
+    "ansible",
+    "docker"])
 def test_pips(host, pip):
     """
     Check that the required pip packages are present
     """
 
-    assert pip in host.pip_package.get_packages(
+    assert pip in host.pip.get_packages(
         pip_path="/opt/virtualenv/molecule/bin/pip"
     )
+
+
+def test_ansible(host):
+    """
+    Check that Ansible is available with the right version
+    """
+
+    assert "ansible" in host.pip.get_packages(
+        pip_path="/opt/virtualenv/molecule/bin/pip"
+    )
+    assert "ansible" in host.pip.get_packages(
+        pip_path="/opt/virtualenv/molecule/bin/pip"
+    )
+
+    ansible_command = host.run(ansible_test_command)
+    assert ansible_command.rc == 0

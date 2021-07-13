@@ -1,12 +1,4 @@
-import os
 from distutils.version import LooseVersion
-import testinfra.utils.ansible_runner
-testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
-    os.environ["MOLECULE_INVENTORY_FILE"]
-).get_hosts("all")
-inspec_test_command = (
-    ". /opt/virtualenv/molecule/bin/activate " + " ; ansible --version"
-)
 dev_sec_profile = "dev-sec/linux-baseline"
 
 

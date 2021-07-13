@@ -9,8 +9,8 @@
 - name: Ensure prerequisites
   package:
     state: present
-    name: "{{ item }}"
-  loop: "{{ prerequisites[ansible_os_family | lower ] }}"
+    name: "{{ prerequisites[ansible_os_family | lower ] }}"
+    update_cache: true
   register: prereq_pkgs
   until: not prereq_pkgs.failed
   retries: 2

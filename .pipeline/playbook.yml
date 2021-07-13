@@ -1,7 +1,14 @@
 ---
-- name: Converge
-  hosts: all
+- name: Converge docker
+  hosts: docker
   connection: docker
   roles:
     - role: ansible-role-molecule-test-agent
       become: true
+
+- name: Converge
+  hosts: ec2
+  become: true
+  user: ubuntu
+  roles:
+    - role: ansible-role-molecule-test-agent

@@ -1,10 +1,5 @@
 # Tests of the execution environment that jenkins jobs
 # will execute in
-import os
-import testinfra.utils.ansible_runner
-testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
-    os.environ["MOLECULE_INVENTORY_FILE"]
-).get_hosts("all")
 
 
 def test_jenkins_user(host):
